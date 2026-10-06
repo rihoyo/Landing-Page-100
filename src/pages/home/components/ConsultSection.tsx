@@ -1,6 +1,6 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 
-import { digitsOnly, formatPhone, normalizeBirth, calculateAge, buildConsultationPayload } from "@/lib/consultation";
+import { digitsOnly, formatPhone, normalizeBirth, calculateAge, buildConsultationPayload, validPhone, cleanName, validName, readSubmissionLimit, registerSubmission, SUBMISSION_SESSION_KEY } from "@/lib/consultation";
 
 const FORM_ID = "consult-form";
 
@@ -16,6 +16,14 @@ const interestOptions = [
 export default function ConsultSection() {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [formError, setFormError] = useState("");
+  const [name, setName] = useState("");
+  const composingName = useRef(false);
+  const limit = useRef(readSubmissionLimit());
+  const [remaining, setRemaining] = useState(() => Math.max(0, Math.ceil((limit.current.blockedUntil - Date.now()) / 1000)));
+  useEffect(() => {
+    const timer = window.setInterval(() => setRemaining(Math.max(0, Math.ceil((limit.current.blockedUntil - Date.now()) / 1000))), 250);
+    return () => window.clearInterval(timer);
+  }, []);
   const [phone, setPhone] = useState("");
   const [birth, setBirth] = useState("");
   const [gender, setGender] = useState("");
@@ -30,9 +38,17 @@ export default function ConsultSection() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (limit.current.blockedUntil > Date.now()) return;
     const form = event.currentTarget;
+    const nameInput = form.elements.namedItem("name") as HTMLInputElement;
+    nameInput.setCustomValidity(validName(nameInput.value) ? "" : "이름은 완성된 한글 또는 영문 2~40자로 입력해주세요. 비속어는 사용할 수 없습니다.");
+    const phoneInput = form.elements.namedItem("phone") as HTMLInputElement;
+    phoneInput.setCustomValidity(validPhone(phoneInput.value) ? "" : "지역번호를 포함한 올바른 전화번호를 입력해주세요.");
     completeBirth(form.elements.namedItem("birth") as HTMLInputElement);
     if (!form.reportValidity()) return;
+    limit.current = registerSubmission(limit.current);
+    try { sessionStorage.setItem(SUBMISSION_SESSION_KEY, JSON.stringify(limit.current)); } catch { /* Keep the in-memory limit if storage is unavailable. */ }
+    setRemaining(Math.max(0, Math.ceil((limit.current.blockedUntil - Date.now()) / 1000)));
     const payload = buildConsultationPayload(form);
     setAge(payload.age);
     setStatus("error");
@@ -125,6 +141,21 @@ export default function ConsultSection() {
                         name="name"
                         type="text"
                         required
+                        value={name}
+                        autoComplete="name"
+                        onCompositionStart={() => { composingName.current = true; }}
+                        onCompositionEnd={event => {
+                          composingName.current = false;
+                          const cleaned = cleanName(event.currentTarget.value);
+                          setName(cleaned);
+                          event.currentTarget.setCustomValidity(validName(cleaned) ? "" : "이름을 확인해주세요. 비속어는 사용할 수 없습니다.");
+                        }}
+                        onChange={event => {
+                          const value = composingName.current ? event.target.value : cleanName(event.target.value);
+                          setName(value);
+                          event.target.setCustomValidity("");
+                        }}
+                        onBlur={event => event.currentTarget.setCustomValidity(validName(event.currentTarget.value) ? "" : "이름은 완성된 한글 또는 영문 2~40자로 입력해주세요. 비속어는 사용할 수 없습니다.")}
                         placeholder="홍길동"
                         className="w-full px-4 py-3 rounded-md border border-background-300 bg-background-50 text-sm text-foreground-900 placeholder:text-foreground-400 focus:outline-none focus:ring-2 focus:ring-primary-400/60"
                       />
@@ -141,9 +172,8 @@ export default function ConsultSection() {
                         inputMode="numeric"
                         autoComplete="tel"
                         value={phone}
-                        onChange={event => setPhone(formatPhone(event.target.value))}
-                        pattern="01[016789]-[0-9]{4}-[0-9]{4}"
-                        title="휴대폰 번호 11자리를 입력해주세요."
+                        onChange={event => { event.target.setCustomValidity(""); setPhone(formatPhone(event.target.value)); }}
+                        title="지역번호 또는 휴대폰 번호를 입력해주세요."
                         required
                         placeholder="010-0000-0000"
                         className="w-full px-4 py-3 rounded-md border border-background-300 bg-background-50 text-sm text-foreground-900 placeholder:text-foreground-400 focus:outline-none focus:ring-2 focus:ring-primary-400/60"
@@ -291,6 +321,7 @@ export default function ConsultSection() {
                     </span>
                   </label>
 
+                  {remaining > 0 && <p role="status" aria-live="polite" className="mt-4 text-sm text-primary-700">1분 이내 5회 신청하여 잠시 대기합니다. {remaining}초 후 다시 신청할 수 있습니다.</p>}
                   {status === "error" && formError && (
                     <p className="mt-4 flex items-start gap-2 text-sm text-primary-700 bg-primary-50 border border-primary-200 rounded-md px-4 py-3">
                       <i className="ri-error-warning-line mt-0.5"></i>
@@ -300,10 +331,10 @@ export default function ConsultSection() {
 
                   <button
                     type="submit"
-                    disabled={status === "submitting"}
+                    disabled={status === "submitting" || remaining > 0}
                     className="mt-6 w-full inline-flex items-center justify-center gap-2 px-6 py-4 rounded-md bg-primary-500 text-background-50 text-base font-bold hover:bg-primary-600 transition-colors cursor-pointer whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    {status === "submitting" ? (
+                    {remaining > 0 ? `${remaining}초 후 다시 신청 가능` : status === "submitting" ? (
                       <>
                         <i className="ri-loader-4-line animate-spin"></i> 신청 중...
                       </>
