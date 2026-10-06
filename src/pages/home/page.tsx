@@ -9,13 +9,15 @@ import ProcessSection from "@/pages/home/components/ProcessSection";
 import FaqSection from "@/pages/home/components/FaqSection";
 import ConsultSection from "@/pages/home/components/ConsultSection";
 
-export default function Home() {
+import HeroAlternative from "./designs/HeroAlternative";
+
+export default function Home({pageId}: {pageId: "aa0001" | "aa0002"}) {
   return (
-    <div className="min-h-screen bg-background-50">
+    <div className={`min-h-screen bg-background-50 design-${pageId}`} data-page-id={pageId}>
       <SiteHeader />
       <main>
-        <HeroSection />
-        <ConsultSection />
+        {pageId === "aa0002" ? <HeroAlternative /> : <HeroSection />}
+        <ConsultSection pageId={pageId} />
         <CoverageSection />
         <ProductsSection />
         <PremiumSection />

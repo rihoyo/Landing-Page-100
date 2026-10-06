@@ -22,3 +22,11 @@ npm run build
 페이지 구성: `src/pages/home/components/`
 업체 정보: `src/components/feature/SiteFooter.tsx`
 신청서: `src/pages/home/components/ConsultSection.tsx`
+
+## 디자인별 주소
+
+- `/aa0001/`: 기존 오렌지 디자인
+- `/aa0002/`: 블루 색상과 새 히어로·신청서 스타일
+- `/`: 기존 디자인 별칭
+
+GitHub Pages용 실제 HTML 경로는 빌드 시 생성됩니다. 두 페이지는 같은 신청 검증과 탭별 요청 제한을 공유합니다. 향후 전송 데이터의 `page_id`는 각각 `aa0001`, `aa0002`입니다. 현재 개인정보 전송 및 저장은 없습니다.

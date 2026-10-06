@@ -13,7 +13,7 @@ const interestOptions = [
   "간병비",
 ];
 
-export default function ConsultSection() {
+export default function ConsultSection({pageId}: {pageId: string}) {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [formError, setFormError] = useState("");
   const [name, setName] = useState("");
@@ -118,6 +118,7 @@ export default function ConsultSection() {
               ) : (
                 <form
                   id={FORM_ID}
+                  data-page-id={pageId}
                   data-readdy-form
                   className="consult-form"
                   onSubmit={handleSubmit}

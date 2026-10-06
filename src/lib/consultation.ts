@@ -55,6 +55,6 @@ export function buildConsultationPayload(form: HTMLFormElement, now = new Date()
   const birth = normalizeBirth(String(data.get('birth') || ''), now);
   return {...Object.fromEntries(data), phone: digitsOnly(String(data.get('phone') || ''), 11), birth,
     age: birth ? calculateAge(birth, now) : null, interest: data.getAll('interest'),
-    page_id: 'cancer-01', utm_source: new URLSearchParams(location.search).get('utm_source') || '',
+    page_id: form.dataset.pageId || 'aa0001', utm_source: new URLSearchParams(location.search).get('utm_source') || '',
     utm_campaign: new URLSearchParams(location.search).get('utm_campaign') || ''};
 }
