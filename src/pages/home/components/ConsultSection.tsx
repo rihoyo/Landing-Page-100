@@ -1,5 +1,7 @@
 import { useState, type FormEvent } from "react";
 
+import { digitsOnly, formatPhone, normalizeBirth, calculateAge, buildConsultationPayload } from "@/lib/consultation";
+
 const FORM_ID = "consult-form";
 
 const interestOptions = [
@@ -14,11 +16,25 @@ const interestOptions = [
 export default function ConsultSection() {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [formError, setFormError] = useState("");
+  const [phone, setPhone] = useState("");
+  const [birth, setBirth] = useState("");
+  const [gender, setGender] = useState("");
+  const [age, setAge] = useState<number | null>(null);
+  const completeBirth = (input: HTMLInputElement) => {
+    const normalized = normalizeBirth(input.value);
+    input.value = normalized;
+    setBirth(normalized);
+    setAge(null);
+    input.setCustomValidity(normalized && calculateAge(normalized) === null ? "올바른 생년월일을 6자리 또는 8자리 숫자로 입력해주세요." : "");
+  };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
+    completeBirth(form.elements.namedItem("birth") as HTMLInputElement);
     if (!form.reportValidity()) return;
+    const payload = buildConsultationPayload(form);
+    setAge(payload.age);
     setStatus("error");
     setFormError("현재 상담 신청 준비 중입니다. 입력하신 정보는 전송되거나 저장되지 않았습니다.");
   };
@@ -89,6 +105,7 @@ export default function ConsultSection() {
                   data-readdy-form
                   className="consult-form"
                   onSubmit={handleSubmit}
+                  noValidate
                   
                 >
                   <h3 className="font-heading text-lg md:text-xl font-bold text-foreground-950">
@@ -121,6 +138,12 @@ export default function ConsultSection() {
                         id="c-phone"
                         name="phone"
                         type="tel"
+                        inputMode="numeric"
+                        autoComplete="tel"
+                        value={phone}
+                        onChange={event => setPhone(formatPhone(event.target.value))}
+                        pattern="01[016789]-[0-9]{4}-[0-9]{4}"
+                        title="휴대폰 번호 11자리를 입력해주세요."
                         required
                         placeholder="010-0000-0000"
                         className="w-full px-4 py-3 rounded-md border border-background-300 bg-background-50 text-sm text-foreground-900 placeholder:text-foreground-400 focus:outline-none focus:ring-2 focus:ring-primary-400/60"
@@ -135,25 +158,35 @@ export default function ConsultSection() {
                         id="c-birth"
                         name="birth"
                         type="text"
-                        placeholder="예) 19850412"
+                        inputMode="numeric"
+                        autoComplete="bday"
+                        value={birth}
+                        onChange={event => {
+                          event.target.setCustomValidity("");
+                          setBirth(digitsOnly(event.target.value, 8));
+                          setAge(null);
+                        }}
+                        onBlur={event => completeBirth(event.currentTarget)}
+                        placeholder="예) 971210 또는 19971210"
                         className="w-full px-4 py-3 rounded-md border border-background-300 bg-background-50 text-sm text-foreground-900 placeholder:text-foreground-400 focus:outline-none focus:ring-2 focus:ring-primary-400/60"
                       />
                     </div>
 
                     <div className="sm:col-span-1">
-                      <label htmlFor="c-gender" className="block text-sm font-medium text-foreground-800 mb-1.5">
-                        성별
-                      </label>
-                      <select
-                        id="c-gender"
-                        name="gender"
-                        defaultValue=""
-                        className="w-full px-4 py-3 rounded-md border border-background-300 bg-background-50 text-sm text-foreground-900 focus:outline-none focus:ring-2 focus:ring-primary-400/60 cursor-pointer"
-                      >
-                        <option value="">선택해 주세요</option>
-                        <option value="남성">남성</option>
-                        <option value="여성">여성</option>
-                      </select>
+                      <fieldset>
+                        <legend className="block text-sm font-medium text-foreground-800 mb-1.5">성별</legend>
+                        <div className="flex gap-4 py-3">
+                          {["남자", "여자"].map(option => (
+                            <label key={option} className="flex items-center gap-2 text-sm cursor-pointer">
+                              <input type="checkbox" name="gender" value={option}
+                                checked={gender === option}
+                                onChange={event => setGender(event.target.checked ? option : "")}
+                                className="accent-primary-500 w-4 h-4 cursor-pointer" />
+                              {option}
+                            </label>
+                          ))}
+                        </div>
+                      </fieldset>
                     </div>
 
                     <div className="sm:col-span-1">
@@ -230,6 +263,8 @@ export default function ConsultSection() {
                       ></textarea>
                     </div>
                   </div>
+
+                  <input type="hidden" name="age" value={age ?? ""} />
 
                   <div className="field-extra-note" aria-hidden="true">
                     <label htmlFor="c-website-alt">Website</label>
