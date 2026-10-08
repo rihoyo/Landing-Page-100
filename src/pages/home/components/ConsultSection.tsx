@@ -2,6 +2,8 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 
 import { digitsOnly, formatPhone, normalizeBirth, calculateAge, buildConsultationPayload, validPhone, cleanName, validName, readSubmissionLimit, registerSubmission, SUBMISSION_SESSION_KEY } from "@/lib/consultation";
 
+import { submitConsultation } from "@/lib/sheets";
+
 const FORM_ID = "consult-form";
 
 const interestOptions = [
@@ -18,6 +20,8 @@ export default function ConsultSection({pageId}: {pageId: string}) {
   const [formError, setFormError] = useState("");
   const [name, setName] = useState("");
   const composingName = useRef(false);
+  const pendingRequest = useRef<{id: string; fingerprint: string} | null>(null);
+  const sending = useRef(false);
   const limit = useRef(readSubmissionLimit());
   const [remaining, setRemaining] = useState(() => Math.max(0, Math.ceil((limit.current.blockedUntil - Date.now()) / 1000)));
   useEffect(() => {
@@ -38,7 +42,7 @@ export default function ConsultSection({pageId}: {pageId: string}) {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (limit.current.blockedUntil > Date.now()) return;
+    if (sending.current || limit.current.blockedUntil > Date.now()) return;
     const form = event.currentTarget;
     const nameInput = form.elements.namedItem("name") as HTMLInputElement;
     nameInput.setCustomValidity(validName(nameInput.value) ? "" : "이름은 완성된 한글 또는 영문 2~40자로 입력해주세요. 비속어는 사용할 수 없습니다.");
@@ -51,8 +55,23 @@ export default function ConsultSection({pageId}: {pageId: string}) {
     setRemaining(Math.max(0, Math.ceil((limit.current.blockedUntil - Date.now()) / 1000)));
     const payload = buildConsultationPayload(form);
     setAge(payload.age);
-    setStatus("error");
-    setFormError("현재 상담 신청 준비 중입니다. 입력하신 정보는 전송되거나 저장되지 않았습니다.");
+    const fingerprint = JSON.stringify(payload);
+    if (pendingRequest.current?.fingerprint !== fingerprint) {
+      pendingRequest.current = {id: crypto.randomUUID(), fingerprint};
+    }
+    sending.current = true;
+    setStatus("submitting");
+    setFormError("");
+    try {
+      await submitConsultation(payload, pendingRequest.current.id);
+      pendingRequest.current = null;
+      setStatus("success");
+    } catch {
+      setStatus("error");
+      setFormError("저장 결과를 확인하지 못했습니다. 잠시 후 같은 내용으로 다시 시도해주세요. 이미 저장된 요청은 중복 접수하지 않습니다.");
+    } finally {
+      sending.current = false;
+    }
   };
 
   return (
