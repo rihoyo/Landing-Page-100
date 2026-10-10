@@ -1,19 +1,37 @@
-import { useConsultationForm } from "@/hooks/useConsultationForm";
-import { cleanName, validName, formatPhone, digitsOnly } from "@/lib/consultation";
+import { useConsultationForm } from '@/hooks/useConsultationForm';
+import { cleanName, validName, formatPhone, digitsOnly } from '@/lib/consultation';
 
-const FORM_ID = "consult-form";
+const FORM_ID = 'consult-form';
 
 const interestOptions = [
-  "일반암 진단비",
-  "유사암 진단비",
-  "항암치료비",
-  "암 수술비",
-  "재진단암",
-  "간병비",
+  '일반암 진단비',
+  '유사암 진단비',
+  '항암치료비',
+  '암 수술비',
+  '재진단암',
+  '간병비',
 ];
 
-export default function ConsultSection({pageId}: {pageId: string}) {
-  const {status, setStatus, formError, name, setName, composingName, remaining, phone, setPhone, birth, setBirth, gender, setGender, age, setAge, completeBirth, handleSubmit} = useConsultationForm();
+export default function ConsultSection({ pageId }: { pageId: string }) {
+  const {
+    status,
+    setStatus,
+    formError,
+    name,
+    setName,
+    composingName,
+    remaining,
+    phone,
+    setPhone,
+    birth,
+    setBirth,
+    gender,
+    setGender,
+    age,
+    setAge,
+    completeBirth,
+    handleSubmit,
+  } = useConsultationForm();
 
   return (
     <section id="consult" className="w-full bg-background-100 py-16 md:py-24">
@@ -39,9 +57,9 @@ export default function ConsultSection({pageId}: {pageId: string}) {
 
               <ul className="mt-8 space-y-4">
                 {[
-                  { icon: "ri-shield-check-line", text: "여러 보험사 암보험 한 번에 비교" },
-                  { icon: "ri-lock-2-line", text: "개인정보는 상담 목적으로만 안전하게 사용" },
-                  { icon: "ri-time-line", text: "영업일 1일 이내 빠른 연락" },
+                  { icon: 'ri-shield-check-line', text: '여러 보험사 암보험 한 번에 비교' },
+                  { icon: 'ri-lock-2-line', text: '개인정보는 상담 목적으로만 안전하게 사용' },
+                  { icon: 'ri-time-line', text: '영업일 1일 이내 빠른 연락' },
                 ].map((item) => (
                   <li key={item.text} className="flex items-center gap-3">
                     <span className="w-10 h-10 rounded-lg bg-accent-100 text-accent-700 flex items-center justify-center shrink-0">
@@ -51,11 +69,10 @@ export default function ConsultSection({pageId}: {pageId: string}) {
                   </li>
                 ))}
               </ul>
-
             </div>
 
             <div className="bg-background-50 rounded-lg border border-background-200 p-5 md:p-8 animate-float-up">
-              {status === "success" ? (
+              {status === 'success' ? (
                 <div className="text-center py-12">
                   <span className="mx-auto w-16 h-16 rounded-full bg-accent-100 text-accent-600 flex items-center justify-center">
                     <i className="ri-check-line text-3xl"></i>
@@ -64,12 +81,12 @@ export default function ConsultSection({pageId}: {pageId: string}) {
                     상담 신청이 완료되었습니다
                   </h3>
                   <p className="mt-3 text-sm text-foreground-600 leading-relaxed">
-                    남겨주신 연락처로 영업일 1일 이내에 담당 상담사가 연락드립니다.
-                    조금만 기다려 주세요.
+                    남겨주신 연락처로 영업일 1일 이내에 담당 상담사가 연락드립니다. 조금만 기다려
+                    주세요.
                   </p>
                   <button
                     type="button"
-                    onClick={() => setStatus("idle")}
+                    onClick={() => setStatus('idle')}
                     className="mt-8 inline-flex items-center gap-2 px-5 py-3 rounded-md bg-secondary-100 text-secondary-900 text-sm font-semibold hover:bg-secondary-200 transition-colors cursor-pointer whitespace-nowrap"
                   >
                     <i className="ri-add-line"></i> 추가로 신청하기
@@ -83,7 +100,6 @@ export default function ConsultSection({pageId}: {pageId: string}) {
                   className="consult-form"
                   onSubmit={handleSubmit}
                   noValidate
-                  
                 >
                   <h3 className="font-heading text-lg md:text-xl font-bold text-foreground-950">
                     무료 상담 신청서
@@ -94,7 +110,10 @@ export default function ConsultSection({pageId}: {pageId: string}) {
 
                   <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="sm:col-span-1">
-                      <label htmlFor="c-name" className="block text-sm font-medium text-foreground-800 mb-1.5">
+                      <label
+                        htmlFor="c-name"
+                        className="block text-sm font-medium text-foreground-800 mb-1.5"
+                      >
                         이름 <span className="text-primary-600">*</span>
                       </label>
                       <input
@@ -104,26 +123,43 @@ export default function ConsultSection({pageId}: {pageId: string}) {
                         required
                         value={name}
                         autoComplete="name"
-                        onCompositionStart={() => { composingName.current = true; }}
-                        onCompositionEnd={event => {
+                        onCompositionStart={() => {
+                          composingName.current = true;
+                        }}
+                        onCompositionEnd={(event) => {
                           composingName.current = false;
                           const cleaned = cleanName(event.currentTarget.value);
                           setName(cleaned);
-                          event.currentTarget.setCustomValidity(validName(cleaned) ? "" : "이름을 확인해주세요. 비속어는 사용할 수 없습니다.");
+                          event.currentTarget.setCustomValidity(
+                            validName(cleaned)
+                              ? ''
+                              : '이름을 확인해주세요. 비속어는 사용할 수 없습니다.',
+                          );
                         }}
-                        onChange={event => {
-                          const value = composingName.current ? event.target.value : cleanName(event.target.value);
+                        onChange={(event) => {
+                          const value = composingName.current
+                            ? event.target.value
+                            : cleanName(event.target.value);
                           setName(value);
-                          event.target.setCustomValidity("");
+                          event.target.setCustomValidity('');
                         }}
-                        onBlur={event => event.currentTarget.setCustomValidity(validName(event.currentTarget.value) ? "" : "이름은 완성된 한글 또는 영문 2~40자로 입력해주세요. 비속어는 사용할 수 없습니다.")}
+                        onBlur={(event) =>
+                          event.currentTarget.setCustomValidity(
+                            validName(event.currentTarget.value)
+                              ? ''
+                              : '이름은 완성된 한글 또는 영문 2~40자로 입력해주세요. 비속어는 사용할 수 없습니다.',
+                          )
+                        }
                         placeholder="홍길동"
                         className="w-full px-4 py-3 rounded-md border border-background-300 bg-background-50 text-sm text-foreground-900 placeholder:text-foreground-400 focus:outline-none focus:ring-2 focus:ring-primary-400/60"
                       />
                     </div>
 
                     <div className="sm:col-span-1">
-                      <label htmlFor="c-phone" className="block text-sm font-medium text-foreground-800 mb-1.5">
+                      <label
+                        htmlFor="c-phone"
+                        className="block text-sm font-medium text-foreground-800 mb-1.5"
+                      >
                         연락처 <span className="text-primary-600">*</span>
                       </label>
                       <input
@@ -133,7 +169,10 @@ export default function ConsultSection({pageId}: {pageId: string}) {
                         inputMode="numeric"
                         autoComplete="tel"
                         value={phone}
-                        onChange={event => { event.target.setCustomValidity(""); setPhone(formatPhone(event.target.value)); }}
+                        onChange={(event) => {
+                          event.target.setCustomValidity('');
+                          setPhone(formatPhone(event.target.value));
+                        }}
                         title="지역번호 또는 휴대폰 번호를 입력해주세요."
                         required
                         placeholder="010-0000-0000"
@@ -142,7 +181,10 @@ export default function ConsultSection({pageId}: {pageId: string}) {
                     </div>
 
                     <div className="sm:col-span-1">
-                      <label htmlFor="c-birth" className="block text-sm font-medium text-foreground-800 mb-1.5">
+                      <label
+                        htmlFor="c-birth"
+                        className="block text-sm font-medium text-foreground-800 mb-1.5"
+                      >
                         생년월일
                       </label>
                       <input
@@ -152,12 +194,12 @@ export default function ConsultSection({pageId}: {pageId: string}) {
                         inputMode="numeric"
                         autoComplete="bday"
                         value={birth}
-                        onChange={event => {
-                          event.target.setCustomValidity("");
+                        onChange={(event) => {
+                          event.target.setCustomValidity('');
                           setBirth(digitsOnly(event.target.value, 8));
                           setAge(null);
                         }}
-                        onBlur={event => completeBirth(event.currentTarget)}
+                        onBlur={(event) => completeBirth(event.currentTarget)}
                         placeholder="예) 971210 또는 19971210"
                         className="w-full px-4 py-3 rounded-md border border-background-300 bg-background-50 text-sm text-foreground-900 placeholder:text-foreground-400 focus:outline-none focus:ring-2 focus:ring-primary-400/60"
                       />
@@ -165,14 +207,23 @@ export default function ConsultSection({pageId}: {pageId: string}) {
 
                     <div className="sm:col-span-1">
                       <fieldset>
-                        <legend className="block text-sm font-medium text-foreground-800 mb-1.5">성별</legend>
+                        <legend className="block text-sm font-medium text-foreground-800 mb-1.5">
+                          성별
+                        </legend>
                         <div className="flex gap-4 py-3">
-                          {["남자", "여자"].map(option => (
-                            <label key={option} className="flex items-center gap-2 text-sm cursor-pointer">
-                              <input type="checkbox" name="gender" value={option}
+                          {['남자', '여자'].map((option) => (
+                            <label
+                              key={option}
+                              className="flex items-center gap-2 text-sm cursor-pointer"
+                            >
+                              <input
+                                type="checkbox"
+                                name="gender"
+                                value={option}
                                 checked={gender === option}
-                                onChange={event => setGender(event.target.checked ? option : "")}
-                                className="accent-primary-500 w-4 h-4 cursor-pointer" />
+                                onChange={(event) => setGender(event.target.checked ? option : '')}
+                                className="accent-primary-500 w-4 h-4 cursor-pointer"
+                              />
                               {option}
                             </label>
                           ))}
@@ -181,7 +232,10 @@ export default function ConsultSection({pageId}: {pageId: string}) {
                     </div>
 
                     <div className="sm:col-span-1">
-                      <label htmlFor="c-time" className="block text-sm font-medium text-foreground-800 mb-1.5">
+                      <label
+                        htmlFor="c-time"
+                        className="block text-sm font-medium text-foreground-800 mb-1.5"
+                      >
                         희망 상담 시간
                       </label>
                       <select
@@ -199,7 +253,10 @@ export default function ConsultSection({pageId}: {pageId: string}) {
                     </div>
 
                     <div className="sm:col-span-1">
-                      <label htmlFor="c-age" className="block text-sm font-medium text-foreground-800 mb-1.5">
+                      <label
+                        htmlFor="c-age"
+                        className="block text-sm font-medium text-foreground-800 mb-1.5"
+                      >
                         관심 연령대
                       </label>
                       <select
@@ -241,7 +298,10 @@ export default function ConsultSection({pageId}: {pageId: string}) {
                     </div>
 
                     <div className="sm:col-span-2">
-                      <label htmlFor="c-message" className="block text-sm font-medium text-foreground-800 mb-1.5">
+                      <label
+                        htmlFor="c-message"
+                        className="block text-sm font-medium text-foreground-800 mb-1.5"
+                      >
                         문의 내용 (선택)
                       </label>
                       <textarea
@@ -255,7 +315,7 @@ export default function ConsultSection({pageId}: {pageId: string}) {
                     </div>
                   </div>
 
-                  <input type="hidden" name="age" value={age ?? ""} />
+                  <input type="hidden" name="age" value={age ?? ''} />
 
                   <div className="field-extra-note" aria-hidden="true">
                     <label htmlFor="c-website-alt">Website</label>
@@ -278,12 +338,19 @@ export default function ConsultSection({pageId}: {pageId: string}) {
                       className="mt-0.5 accent-primary-500 w-4 h-4 cursor-pointer"
                     />
                     <span className="text-xs md:text-[13px] text-foreground-600 leading-relaxed">
-                      개인정보 수집·이용에 동의합니다. (필수) 수집 항목: 이름·연락처 및 선택 입력 정보 / 목적: 보험 비교 상담 / 보유 기간: 접수일로부터 90일. 동의를 거부할 수 있으나 상담 신청이 제한됩니다.
+                      개인정보 수집·이용에 동의합니다. (필수) 수집 항목: 이름·연락처 및 선택 입력
+                      정보 / 목적: 보험 비교 상담 / 보유 기간: 접수일로부터 90일. 동의를 거부할 수
+                      있으나 상담 신청이 제한됩니다.
                     </span>
                   </label>
 
-                  {remaining > 0 && <p role="status" aria-live="polite" className="mt-4 text-sm text-primary-700">1분 이내 5회 신청하여 잠시 대기합니다. {remaining}초 후 다시 신청할 수 있습니다.</p>}
-                  {status === "error" && formError && (
+                  {remaining > 0 && (
+                    <p role="status" aria-live="polite" className="mt-4 text-sm text-primary-700">
+                      1분 이내 5회 신청하여 잠시 대기합니다. {remaining}초 후 다시 신청할 수
+                      있습니다.
+                    </p>
+                  )}
+                  {status === 'error' && formError && (
                     <p className="mt-4 flex items-start gap-2 text-sm text-primary-700 bg-primary-50 border border-primary-200 rounded-md px-4 py-3">
                       <i className="ri-error-warning-line mt-0.5"></i>
                       <span>{formError}</span>
@@ -292,10 +359,12 @@ export default function ConsultSection({pageId}: {pageId: string}) {
 
                   <button
                     type="submit"
-                    disabled={status === "submitting" || remaining > 0}
+                    disabled={status === 'submitting' || remaining > 0}
                     className="mt-6 w-full inline-flex items-center justify-center gap-2 px-6 py-4 rounded-md bg-primary-500 text-background-50 text-base font-bold hover:bg-primary-600 transition-colors cursor-pointer whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    {remaining > 0 ? `${remaining}초 후 다시 신청 가능` : status === "submitting" ? (
+                    {remaining > 0 ? (
+                      `${remaining}초 후 다시 신청 가능`
+                    ) : status === 'submitting' ? (
                       <>
                         <i className="ri-loader-4-line animate-spin"></i> 신청 중...
                       </>

@@ -18,9 +18,12 @@ for (const { id, paths } of landingRoutes) {
     for (const imported of chunk.imports || []) collect(imported);
   }
   collect(entry);
-  const hints = [...styles].map(file => `<link rel="stylesheet" href="${base}${file}">`)
-    .concat([...chunks].map(file => `<link rel="modulepreload" href="${base}${file}">`)).join('\n');
-  const html = template.replace('<div id="root"></div>', () => `<div id="root">${render(id)}</div>`)
+  const hints = [...styles]
+    .map((file) => `<link rel="stylesheet" href="${base}${file}">`)
+    .concat([...chunks].map((file) => `<link rel="modulepreload" href="${base}${file}">`))
+    .join('\n');
+  const html = template
+    .replace('<div id="root"></div>', () => `<div id="root">${render(id)}</div>`)
     .replace('</head>', `${hints}\n</head>`);
   for (const path of paths) {
     const directory = path === '/' ? 'dist' : `dist${path}`;

@@ -23,10 +23,22 @@ const PAGE_ID_PATTERN = /^aa(?!0000$)\d{4}$/;
 
 // 열 순서입니다. 기존 데이터가 있다면 순서를 바꾸지 마세요.
 const HEADERS = [
-  '접수시간', '요청번호', '랜딩번호', '이름',
-  '연락처', '생년월일', '나이', '성별',
-  '상담시간', '연령대', '관심상품', '문의내용',
-  '동의여부', '유입소스', '유입캠페인', '주거지역',
+  '접수시간',
+  '요청번호',
+  '랜딩번호',
+  '이름',
+  '연락처',
+  '생년월일',
+  '나이',
+  '성별',
+  '상담시간',
+  '연령대',
+  '관심상품',
+  '문의내용',
+  '동의여부',
+  '유입소스',
+  '유입캠페인',
+  '주거지역',
 ];
 
 // ─── 2. 웹 앱 진입점 ────────────────────────────────────────
@@ -62,13 +74,14 @@ function doPost(e) {
     if (cachedRequest(cache, cacheKey, targetKey)) return receipt(p, true);
 
     const sheet = openSheet(target);
-    prepareHeaders(sheet);
-    if (alreadySaved(sheet, p.request_id)) {
+    // 마지막 행은 한 번만 조회하고 제목 검사·중복 검색·쓰기에서 공유합니다.
+    const lastRow = prepareHeaders(sheet, sheet.getLastRow());
+    if (alreadySaved(sheet, p.request_id, lastRow)) {
       rememberRequest(cache, cacheKey, targetKey);
       return receipt(p, true);
     }
 
-    writeSubmission(sheet, p);
+    writeSubmission(sheet, p, lastRow + 1);
     SpreadsheetApp.flush(); // 실제 쓰기 완료 후에만 성공 응답을 보냅니다.
     rememberRequest(cache, cacheKey, targetKey);
     return receipt(p, false);
@@ -97,7 +110,12 @@ function readSubmission(e) {
 
   // 전화번호의 하이픈·공백을 제거하고 국내 번호 형식을 검사합니다.
   const phone = String(p.phone || '').replace(/[^0-9]/g, '');
-  if (!/^(?:02\d{7,8}|0(?:31|32|33|41|42|43|44|51|52|53|54|55|61|62|63|64)\d{7,8}|01[016789]\d{8}|070\d{8}|050[2-8]\d{7})$/.test(phone)) throw new Error('phone');
+  if (
+    !/^(?:02\d{7,8}|0(?:31|32|33|41|42|43|44|51|52|53|54|55|61|62|63|64)\d{7,8}|01[016789]\d{8}|070\d{8}|050[2-8]\d{7})$/.test(
+      phone,
+    )
+  )
+    throw new Error('phone');
 
   // website_alt는 사람이 입력하지 않는 스팸 차단용 숨김 칸입니다.
   if (!['on', true, 'true'].includes(p.agree)) throw new Error('consent');
@@ -115,15 +133,24 @@ function readSubmission(e) {
 function selectStorage(pageId) {
   const number = Number(pageId.slice(2));
   const routes = STORAGE_ROUTES.map(function (route) {
-    if (!route || !Number.isInteger(route.from) || !Number.isInteger(route.to) ||
-        route.from < 1 || route.to > 9999 || route.from > route.to ||
-        typeof route.sheetName !== 'string' || !route.sheetName.trim() ||
-        (route.spreadsheetId !== undefined &&
-         (typeof route.spreadsheetId !== 'string' || !route.spreadsheetId.trim()))) {
+    if (
+      !route ||
+      !Number.isInteger(route.from) ||
+      !Number.isInteger(route.to) ||
+      route.from < 1 ||
+      route.to > 9999 ||
+      route.from > route.to ||
+      typeof route.sheetName !== 'string' ||
+      !route.sheetName.trim() ||
+      (route.spreadsheetId !== undefined &&
+        (typeof route.spreadsheetId !== 'string' || !route.spreadsheetId.trim()))
+    ) {
       throw new Error('routing');
     }
     return route;
-  }).sort(function (a, b) { return a.from - b.from; });
+  }).sort(function (a, b) {
+    return a.from - b.from;
+  });
 
   for (let i = 1; i < routes.length; i++) {
     if (routes[i].from <= routes[i - 1].to) throw new Error('routing');
@@ -146,34 +173,40 @@ function openSheet(target) {
 }
 
 /** [6] 첫 행 제목을 확인합니다. 구버전 시트에는 마지막에 주거지역만 추가합니다. */
-function prepareHeaders(sheet) {
-  if (sheet.getLastRow() === 0) {
+function prepareHeaders(sheet, lastRow) {
+  if (lastRow === 0) {
     sheet.appendRow(HEADERS);
     sheet.setFrozenRows(1);
     sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold');
-    return;
+    return 1;
   }
   const current = sheet.getRange(1, 1, 1, HEADERS.length).getValues()[0];
   const oldHeadersMatch = current.slice(0, -1).join('|') === HEADERS.slice(0, -1).join('|');
   if (oldHeadersMatch && !current[HEADERS.length - 1]) {
-    sheet.getRange(1, HEADERS.length).setValue(HEADERS[HEADERS.length - 1]).setFontWeight('bold');
+    sheet
+      .getRange(1, HEADERS.length)
+      .setValue(HEADERS[HEADERS.length - 1])
+      .setFontWeight('bold');
   } else if (current.join('|') !== HEADERS.join('|')) {
     throw new Error('headers');
   }
+  return lastRow;
 }
 
 /** [7] 선택한 시트의 B열에서 같은 요청번호를 찾아 중복 저장을 막습니다. */
-function alreadySaved(sheet, requestId) {
-  const lastRow = sheet.getLastRow();
+function alreadySaved(sheet, requestId, lastRow) {
   if (lastRow < 2) return false;
-  return Boolean(sheet.getRange(2, 2, lastRow - 1, 1)
-    .createTextFinder(requestId)
-    .matchEntireCell(true)
-    .findNext());
+  return Boolean(
+    sheet
+      .getRange(2, 2, lastRow - 1, 1)
+      .createTextFinder(requestId)
+      .matchEntireCell(true)
+      .findNext(),
+  );
 }
 
 /** [8] 열 순서에 맞춰 새 행 하나를 추가합니다. 전화번호 앞자리 0도 유지합니다. */
-function writeSubmission(sheet, p) {
+function writeSubmission(sheet, p, rowNumber) {
   const row = [
     Utilities.formatDate(new Date(), 'Asia/Seoul', 'yyyy-MM-dd HH:mm:ss'),
     p.request_id,
@@ -193,7 +226,7 @@ function writeSubmission(sheet, p) {
     p.region,
   ].map(safeCell);
 
-  const range = sheet.getRange(sheet.getLastRow() + 1, 1, 1, HEADERS.length);
+  const range = sheet.getRange(rowNumber, 1, 1, HEADERS.length);
   range.setNumberFormat('@'); // 모든 셀을 텍스트로 저장합니다.
   range.setValues([row]);
 }
@@ -240,8 +273,13 @@ function serverAge(birth) {
   const m = Number(birth.slice(4, 6));
   const d = Number(birth.slice(6, 8));
   const date = new Date(Date.UTC(y, m - 1, d));
-  if (y < 1900 || date.getUTCFullYear() !== y ||
-      date.getUTCMonth() + 1 !== m || date.getUTCDate() !== d) return null;
+  if (
+    y < 1900 ||
+    date.getUTCFullYear() !== y ||
+    date.getUTCMonth() + 1 !== m ||
+    date.getUTCDate() !== d
+  )
+    return null;
 
   const today = Utilities.formatDate(new Date(), 'Asia/Seoul', 'yyyyMMdd');
   const age = Number(today.slice(0, 4)) - y - (today.slice(4) < birth.slice(4) ? 1 : 0);
@@ -268,12 +306,16 @@ function failureResponse(error) {
     routing: ['ROUTING_CONFIG', '저장 위치 설정을 확인해주세요.'],
     headers: ['SHEET_HEADERS', '접수 시트의 열 제목 설정을 확인해주세요.'],
   };
-  const failure = errors[error.message] || ['STORAGE_FAILED', '시트 저장에 실패했습니다. 배포 권한과 시트 설정을 확인해주세요.'];
-  return jsonResponse({ok: false, code: failure[0], error: failure[1]});
+  const failure = errors[error.message] || [
+    'STORAGE_FAILED',
+    '시트 저장에 실패했습니다. 배포 권한과 시트 설정을 확인해주세요.',
+  ];
+  return jsonResponse({ ok: false, code: failure[0], error: failure[1] });
 }
 
 /** [16] 응답을 홈페이지가 읽을 수 있는 JSON 형식으로 보냅니다. */
 function jsonResponse(value) {
-  return ContentService.createTextOutput(JSON.stringify(value))
-    .setMimeType(ContentService.MimeType.JSON);
+  return ContentService.createTextOutput(JSON.stringify(value)).setMimeType(
+    ContentService.MimeType.JSON,
+  );
 }

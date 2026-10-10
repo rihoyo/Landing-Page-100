@@ -45,3 +45,6 @@ Node.js 24를 사용합니다. GitHub Pages 경로 검증은 `VITE_BASE_PATH=/La
 
 
 각 랜딩은 빌드 때 완성된 화면을 HTML에 포함합니다. 첫 화면은 자바스크립트 실행을 기다리지 않으며, 해당 페이지의 CSS와 코드만 미리 불러온 뒤 React가 신청 폼과 클릭 동작을 연결합니다. 접속 시 세션 확인이나 수신 API 호출은 하지 않습니다.
+
+
+코드 수정 위치와 신청 처리 흐름은 [코드 구조 안내](docs/code-structure.md)를 참고하세요. `npm run format`으로 정리하고 `npm run format:check`로 형식을 검사할 수 있습니다.

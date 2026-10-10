@@ -1,4 +1,4 @@
-import { processSteps } from "@/mocks/processSteps";
+import { processSteps } from '@/mocks/processSteps';
 
 export default function ProcessSection() {
   return (
@@ -26,7 +26,9 @@ export default function ProcessSection() {
                 key={step.id}
                 className="relative bg-secondary-900 rounded-lg border border-secondary-800 p-5 md:p-6"
               >
-                <span className="font-heading text-3xl font-bold text-secondary-700">{step.step}</span>
+                <span className="font-heading text-3xl font-bold text-secondary-700">
+                  {step.step}
+                </span>
                 <span className="mt-4 w-12 h-12 rounded-lg bg-primary-500/15 text-primary-400 flex items-center justify-center">
                   <i className={`${step.icon} text-2xl`}></i>
                 </span>

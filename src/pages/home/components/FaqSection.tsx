@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { faqs } from "@/mocks/reviews";
+import { useState } from 'react';
+import { faqs } from '@/mocks/reviews';
 
 export default function FaqSection() {
   const [openId, setOpenId] = useState<string | null>(faqs[0].id);
@@ -25,7 +25,9 @@ export default function FaqSection() {
                 <div
                   key={faq.id}
                   className={`rounded-lg border transition-colors ${
-                    isOpen ? "border-primary-300 bg-primary-50" : "border-background-200 bg-background-50"
+                    isOpen
+                      ? 'border-primary-300 bg-primary-50'
+                      : 'border-background-200 bg-background-50'
                   }`}
                 >
                   <button
@@ -34,19 +36,23 @@ export default function FaqSection() {
                     className="w-full flex items-center justify-between gap-4 px-5 md:px-6 py-4 md:py-5 text-left cursor-pointer"
                   >
                     <span className="flex items-start gap-3">
-                      <span className="font-heading text-sm md:text-base font-bold text-primary-600">Q.</span>
+                      <span className="font-heading text-sm md:text-base font-bold text-primary-600">
+                        Q.
+                      </span>
                       <span className="text-sm md:text-base font-semibold text-foreground-900">
                         {faq.question}
                       </span>
                     </span>
                     <span className="shrink-0 w-7 h-7 rounded-full bg-background-100 text-foreground-600 flex items-center justify-center">
-                      <i className={isOpen ? "ri-subtract-line" : "ri-add-line"}></i>
+                      <i className={isOpen ? 'ri-subtract-line' : 'ri-add-line'}></i>
                     </span>
                   </button>
                   {isOpen && (
                     <div className="px-5 md:px-6 pb-5 md:pb-6">
                       <div className="flex items-start gap-3">
-                        <span className="font-heading text-sm md:text-base font-bold text-accent-600">A.</span>
+                        <span className="font-heading text-sm md:text-base font-bold text-accent-600">
+                          A.
+                        </span>
                         <p className="text-sm md:text-[15px] text-foreground-700 leading-relaxed whitespace-pre-line">
                           {faq.answer}
                         </p>
@@ -57,7 +63,6 @@ export default function FaqSection() {
               );
             })}
           </div>
-
         </div>
       </div>
     </section>

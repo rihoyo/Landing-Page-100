@@ -4,7 +4,7 @@ import './index.css';
 import { loadApp } from './App';
 
 // Keep the pre-rendered screen visible while connecting form and click handlers.
-void loadApp().then(app => {
+void loadApp().then((app) => {
   const root = document.getElementById('root')!;
   const screen = <StrictMode>{app}</StrictMode>;
   if (root.hasChildNodes()) hydrateRoot(root, screen);

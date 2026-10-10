@@ -1,7 +1,7 @@
 const trustPoints = [
-  { icon: "ri-shield-check-line", label: "보험대리점 정식 등록" },
-  { icon: "ri-wallet-3-line", label: "비교·상담 100% 무료" },
-  { icon: "ri-user-star-line", label: "전문 상담사 1:1 배정" },
+  { icon: 'ri-shield-check-line', label: '보험대리점 정식 등록' },
+  { icon: 'ri-wallet-3-line', label: '비교·상담 100% 무료' },
+  { icon: 'ri-user-star-line', label: '전문 상담사 1:1 배정' },
 ];
 
 export default function HeroSection() {
@@ -62,7 +62,10 @@ export default function HeroSection() {
             <div className="relative w-full max-w-md mx-auto aspect-square flex items-center justify-center">
               <div className="absolute inset-0 rounded-full bg-primary-100/60 blur-2xl"></div>
               <img
-                src={import.meta.env.BASE_URL + "assets/c9ae78f9-2afa-49a7-ae44-00344ca802c5_compressed_db8045c7-9d41-4304-8034-a71688d8706e.webp"}
+                src={
+                  import.meta.env.BASE_URL +
+                  'assets/c9ae78f9-2afa-49a7-ae44-00344ca802c5_compressed_db8045c7-9d41-4304-8034-a71688d8706e.webp'
+                }
                 alt="돋보기로 암 보장 내용을 꼼꼼히 살펴보는 3D 일러스트"
                 title="암보험 보장 비교 무료 상담"
                 className="relative w-full h-full object-contain animate-float-soft"

@@ -1,26 +1,24 @@
-import { useMemo, useState } from "react";
-import { insuranceProducts } from "@/mocks/insuranceProducts";
+import { useMemo, useState } from 'react';
+import { insuranceProducts } from '@/mocks/insuranceProducts';
 
-type SortKey = "premium" | "rating";
+type SortKey = 'premium' | 'rating';
 
-const formatWon = (value: number) => `${value.toLocaleString("ko-KR")}원`;
+const formatWon = (value: number) => `${value.toLocaleString('ko-KR')}원`;
 
 export default function ProductsSection() {
-  const [sortKey, setSortKey] = useState<SortKey>("premium");
-  const [tag, setTag] = useState<string>("전체");
+  const [sortKey, setSortKey] = useState<SortKey>('premium');
+  const [tag, setTag] = useState<string>('전체');
 
   const tags = useMemo(() => {
     const all = insuranceProducts.flatMap((p) => p.tags);
-    return ["전체", ...Array.from(new Set(all)).slice(0, 6)];
+    return ['전체', ...Array.from(new Set(all)).slice(0, 6)];
   }, []);
 
   const list = useMemo(() => {
     const filtered =
-      tag === "전체"
-        ? insuranceProducts
-        : insuranceProducts.filter((p) => p.tags.includes(tag));
+      tag === '전체' ? insuranceProducts : insuranceProducts.filter((p) => p.tags.includes(tag));
     return [...filtered].sort((a, b) =>
-      sortKey === "premium" ? a.monthlyPremium - b.monthlyPremium : b.rating - a.rating
+      sortKey === 'premium' ? a.monthlyPremium - b.monthlyPremium : b.rating - a.rating,
     );
   }, [sortKey, tag]);
 
@@ -38,30 +36,30 @@ export default function ProductsSection() {
                 <br className="hidden sm:block" /> 암보험 상품
               </h2>
               <p className="mt-5 text-sm md:text-base text-foreground-600 leading-relaxed">
-                실제 상담에서 인기가 높은 암보험 구성을 정리했습니다. 보험료는 가입 조건에 따라 달라질 수 있어
-                상담을 통해 정확한 금액을 확인하는 것이 좋습니다.
+                실제 상담에서 인기가 높은 암보험 구성을 정리했습니다. 보험료는 가입 조건에 따라
+                달라질 수 있어 상담을 통해 정확한 금액을 확인하는 것이 좋습니다.
               </p>
             </div>
 
             <div className="flex items-center gap-1 bg-background-50 border border-background-200 rounded-full p-1 self-start lg:self-auto">
               <button
                 type="button"
-                onClick={() => setSortKey("premium")}
+                onClick={() => setSortKey('premium')}
                 className={`px-4 py-2 rounded-full text-xs md:text-sm font-semibold transition-colors cursor-pointer whitespace-nowrap ${
-                  sortKey === "premium"
-                    ? "bg-primary-500 text-background-50"
-                    : "text-foreground-600 hover:text-foreground-900"
+                  sortKey === 'premium'
+                    ? 'bg-primary-500 text-background-50'
+                    : 'text-foreground-600 hover:text-foreground-900'
                 }`}
               >
                 보험료 낮은 순
               </button>
               <button
                 type="button"
-                onClick={() => setSortKey("rating")}
+                onClick={() => setSortKey('rating')}
                 className={`px-4 py-2 rounded-full text-xs md:text-sm font-semibold transition-colors cursor-pointer whitespace-nowrap ${
-                  sortKey === "rating"
-                    ? "bg-primary-500 text-background-50"
-                    : "text-foreground-600 hover:text-foreground-900"
+                  sortKey === 'rating'
+                    ? 'bg-primary-500 text-background-50'
+                    : 'text-foreground-600 hover:text-foreground-900'
                 }`}
               >
                 만족도 높은 순
@@ -77,8 +75,8 @@ export default function ProductsSection() {
                 onClick={() => setTag(item)}
                 className={`px-3.5 py-2 rounded-full text-xs md:text-[13px] font-medium border transition-colors cursor-pointer whitespace-nowrap ${
                   tag === item
-                    ? "bg-secondary-900 text-background-50 border-secondary-900"
-                    : "bg-background-50 text-foreground-600 border-background-300 hover:border-secondary-400"
+                    ? 'bg-secondary-900 text-background-50 border-secondary-900'
+                    : 'bg-background-50 text-foreground-600 border-background-300 hover:border-secondary-400'
                 }`}
               >
                 {item}

@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { agePlans } from "@/mocks/coverageItems";
+import { useState } from 'react';
+import { agePlans } from '@/mocks/coverageItems';
 
-const formatWon = (value: number) => value.toLocaleString("ko-KR");
+const formatWon = (value: number) => value.toLocaleString('ko-KR');
 
 export default function PremiumSection() {
   const [activeId, setActiveId] = useState(agePlans[2].id);
@@ -34,8 +34,8 @@ export default function PremiumSection() {
                 onClick={() => setActiveId(plan.id)}
                 className={`px-5 py-2.5 rounded-full text-sm font-semibold border transition-colors cursor-pointer whitespace-nowrap ${
                   active.id === plan.id
-                    ? "bg-primary-500 text-background-50 border-primary-500"
-                    : "bg-background-50 text-foreground-600 border-background-300 hover:border-primary-300"
+                    ? 'bg-primary-500 text-background-50 border-primary-500'
+                    : 'bg-background-50 text-foreground-600 border-background-300 hover:border-primary-300'
                 }`}
               >
                 {plan.label} {plan.gender}
@@ -50,7 +50,9 @@ export default function PremiumSection() {
               </p>
               <p className="mt-3 font-heading text-4xl md:text-5xl font-bold text-primary-600">
                 {formatWon(active.premium)}
-                <span className="text-lg md:text-xl font-semibold text-foreground-500">원 부터</span>
+                <span className="text-lg md:text-xl font-semibold text-foreground-500">
+                  원 부터
+                </span>
               </p>
               <p className="mt-4 text-xs md:text-sm text-foreground-500 leading-relaxed">
                 {active.note}
@@ -73,12 +75,15 @@ export default function PremiumSection() {
               </p>
               <div className="mt-5 grid grid-cols-2 gap-3">
                 {[
-                  { label: "납입 기간", value: "20년납" },
-                  { label: "보험 기간", value: "종신 / 100세" },
-                  { label: "갱신 여부", value: "비갱신형" },
-                  { label: "가입 심사", value: "일반 / 간편" },
+                  { label: '납입 기간', value: '20년납' },
+                  { label: '보험 기간', value: '종신 / 100세' },
+                  { label: '갱신 여부', value: '비갱신형' },
+                  { label: '가입 심사', value: '일반 / 간편' },
                 ].map((spec) => (
-                  <div key={spec.label} className="px-4 py-3 rounded-md bg-secondary-50 border border-secondary-200">
+                  <div
+                    key={spec.label}
+                    className="px-4 py-3 rounded-md bg-secondary-50 border border-secondary-200"
+                  >
                     <p className="text-[11px] text-foreground-400">{spec.label}</p>
                     <p className="mt-1 text-sm font-semibold text-foreground-800">{spec.value}</p>
                   </div>
