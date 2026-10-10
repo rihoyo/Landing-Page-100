@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 
 import { normalizeBirth, calculateAge, buildConsultationPayload, validPhone, validName, readSubmissionLimit, registerSubmission, SUBMISSION_SESSION_KEY } from "@/lib/consultation";
 
-import { submitConsultation } from "@/lib/sheets";
+import { ConsultationError, submitConsultation } from "@/lib/sheets";
 
 export function useConsultationForm() {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
@@ -58,9 +58,9 @@ export function useConsultationForm() {
       await submitConsultation(payload, pendingRequest.current.id);
       pendingRequest.current = null;
       setStatus("success");
-    } catch {
+    } catch (error) {
       setStatus("error");
-      setFormError("저장 결과를 확인하지 못했습니다. 잠시 후 같은 내용으로 다시 시도해주세요. 이미 저장된 요청은 중복 접수하지 않습니다.");
+      setFormError(error instanceof ConsultationError ? error.message : "저장 결과를 확인하지 못했습니다. 잠시 후 같은 내용으로 다시 시도해주세요. 이미 저장된 요청은 중복 접수하지 않습니다.");
     } finally {
       sending.current = false;
     }
