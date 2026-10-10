@@ -33,6 +33,6 @@ GitHub Pages용 실제 HTML 경로는 빌드 시 생성됩니다. 모든 페이�
 
 ## 랜딩 확장 및 성능
 
-경로와 정적 HTML 생성은 `src/pages/registry.ts` 목록을 함께 사용합니다. 새 랜딩을 추가할 때 목록과 `src/App.tsx`의 지연 로딩 연결을 추가합니다. 랜딩별 JS/CSS는 선택한 페이지에 필요한 청크만 로드하며, 신청 로직은 `src/hooks/useConsultationForm.ts`에 공유합니다. 대기 타이머는 요청 제한이 활성화된 동안만 실행합니다. 세 번째 랜딩의 일러스트는 해상도에 독립적인 SVG이며 별도 이미지 요청이 없습니다.
+경로와 정적 HTML 생성은 `src/pages/registry.ts` 목록을 함께 사용합니다. 새 랜딩을 추가할 때 목록과 `src/App.tsx`의 지연 로딩 연결을 추가합니다. 랜딩별 JS/CSS는 선택한 페이지에 필요한 청크만 로드하며, 신청 로직은 `src/hooks/useConsultationForm.ts`에 공유합니다. 대기 타이머는 요청 제한이 활성화된 동안만 실행합니다. 세 번째 랜딩의 일러스트는 `public/assets/health/`의 최적화된 WebP 이미지 URL을 사용합니다. `srcSet`으로 화면에 맞는 크기를 선택하고, 첫 화면 이미지는 우선 로딩하며 아래 이미지는 지연 로딩합니다. 새 랜딩에서도 같은 자산 URL을 재사용할 수 있습니다.
 
 Node.js 24를 사용합니다. GitHub Pages 경로 검증은 `VITE_BASE_PATH=/Landing-Page-100/ npm run build`로 실행할 수 있습니다. 해당 빌드를 미리 볼 때도 `VITE_BASE_PATH=/Landing-Page-100/ npm start`로 같은 기본 경로를 적용합니다. 외부 신청 API의 실제 데이터 저장 검증은 운영 데이터를 생성하므로 일반 화면 테스트에서는 요청을 모킹합니다.
