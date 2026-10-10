@@ -21,9 +21,14 @@ test('every landing uses the same transport and preserves page_id and region', a
     await submitConsultation({page_id: id, region: '서울'}, `request-${id}`);
   }
 });
-test('old receiver rejection is diagnosed, never reported as a successful save', async () => {
-  globalThis.fetch = async (_, options) => options.body ? response({ok: false, error: '입력 정보를 확인해주세요.'}) : response({service: 'landing-consultation', version: 1});
-  await assert.rejects(submitConsultation({page_id: 'aa0003'}, 'request-0003'), error => error instanceof ConsultationError && error.code === 'RECEIVER_UPDATE_REQUIRED');
+test('unversioned input rejection is preserved without guessing a page restriction', async () => {
+  let requests = 0;
+  globalThis.fetch = async () => {
+    requests++;
+    return response({ok: false, error: '입력 정보를 확인해주세요.'});
+  };
+  await assert.rejects(submitConsultation({page_id: 'aa0003'}, 'request-0003'), error => error instanceof ConsultationError && error.code === 'RECEIVER_REJECTED' && error.message === '입력 정보를 확인해주세요.');
+  assert.equal(requests, 1);
 });
 test('receiver failure and mismatched receipt never produce success', async () => {
   globalThis.fetch = async () => response({ok: false, code: 'STORAGE_FAILED', error: '시트 저장 실패'});

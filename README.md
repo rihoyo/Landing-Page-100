@@ -39,6 +39,6 @@ Node.js 24를 사용합니다. GitHub Pages 경로 검증은 `VITE_BASE_PATH=/La
 
 ## 공통 수신 서버 업데이트
 
-현재 Google Apps Script v1은 `aa0001`, `aa0002`만 허용합니다. `aa0003` 접수를 받으려면 [수신 서버 업데이트 안내](apps-script/README.md)에 따라 `apps-script/Code.gs` v2를 기존 배포에 한 번 반영해야 합니다. GitHub Pages 배포는 Google Apps Script를 자동으로 업데이트하지 않습니다. v2는 정상적인 `aaNNNN` 번호를 공통으로 처리하므로 새 랜딩마다 수신 코드를 복사하거나 허용 목록을 변경할 필요가 없습니다.
+현재 공개 수신 API는 동일한 입력의 `aa0001` 요청은 승인하고 `aa0003` 요청은 거부합니다. 사용자가 공유한 코드에는 `aa0003`이 허용되어 있으므로 기존 웹 앱 배포에 최신 코드가 반영되었는지 확인해야 합니다. `version` 값만으로 허용 목록을 판단할 수 없습니다. `aa0003` 접수를 받으려면 [수신 서버 업데이트 안내](apps-script/README.md)에 따라 `apps-script/Code.gs` v2를 기존 배포에 한 번 반영해야 합니다. GitHub Pages 배포는 Google Apps Script를 자동으로 업데이트하지 않습니다. v2는 정상적인 `aaNNNN` 번호를 공통으로 처리하므로 새 랜딩마다 수신 코드를 복사하거나 허용 목록을 변경할 필요가 없습니다.
 
 `npm test`는 기존 랜딩과 새 랜딩 수신, 시트 헤더 마이그레이션, 중복 요청, 전송 오류와 이미지 용량 제한을 검증합니다. 시트 저장의 실제 운영 검증은 Apps Script v2 배포 후 별도로 해야 합니다.

@@ -13,24 +13,27 @@ function doPost(e) {
   let lock;
   try {
     if (!e || !e.postData || e.postData.contents.length > 20000) throw new Error('invalid');
-    const p = JSON.parse(e.postData.contents);
+    let p;
+    try { p = JSON.parse(e.postData.contents); } catch (_) { throw new Error('invalid'); }
+    if (!p || typeof p !== 'object' || Array.isArray(p)) throw new Error('invalid');
     if (!PAGE_ID_PATTERN.test(String(p.page_id || ''))) throw new Error('page_id');
-    if (!/^[a-zA-Z0-9-]{16,80}$/.test(p.request_id || '')) throw new Error('invalid');
-    if (!/^[가-힣a-zA-Z]{2,40}$/.test(p.name || '')) throw new Error('invalid');
+    if (!/^[a-zA-Z0-9-]{16,80}$/.test(p.request_id || '')) throw new Error('request_id');
+    if (!/^[가-힣a-zA-Z]{2,40}$/.test(p.name || '')) throw new Error('name');
     const phone = String(p.phone || '').replace(/[^0-9]/g, '');
-    if (!/^(?:02\d{7,8}|0(?:31|32|33|41|42|43|44|51|52|53|54|55|61|62|63|64)\d{7,8}|01[016789]\d{8}|070\d{8}|050[2-8]\d{7})$/.test(phone)) throw new Error('invalid');
-    if (!['on', true, 'true'].includes(p.agree) || p.website_alt) throw new Error('invalid');
+    if (!/^(?:02\d{7,8}|0(?:31|32|33|41|42|43|44|51|52|53|54|55|61|62|63|64)\d{7,8}|01[016789]\d{8}|070\d{8}|050[2-8]\d{7})$/.test(phone)) throw new Error('phone');
+    if (!['on', true, 'true'].includes(p.agree)) throw new Error('consent');
+    if (p.website_alt) throw new Error('invalid');
     const birth = String(p.birth || '');
     const age = birth ? serverAge(birth) : '';
-    if (birth && age === null) throw new Error('invalid');
+    if (birth && age === null) throw new Error('birth');
     // Cache confirmed request IDs only; no customer data is cached.
-    const cache = CacheService.getScriptCache();
+    const cache = requestCache();
     const cacheKey = 'consult:' + p.request_id;
-    if (cache.get(cacheKey)) return jsonResponse({ok: true, request_id: p.request_id, duplicate: true});
+    if (cachedRequest(cache, cacheKey)) return jsonResponse({ok: true, request_id: p.request_id, duplicate: true});
     lock = LockService.getScriptLock();
     lock.waitLock(10000);
     // Recheck after locking to serialize concurrent retries.
-    if (cache.get(cacheKey)) return jsonResponse({ok: true, request_id: p.request_id, duplicate: true});
+    if (cachedRequest(cache, cacheKey)) return jsonResponse({ok: true, request_id: p.request_id, duplicate: true});
     const book = SpreadsheetApp.openById(SPREADSHEET_ID);
     const sheet = book.getSheetByName(SHEET_NAME) || book.insertSheet(SHEET_NAME);
     if (sheet.getLastRow() === 0) {
@@ -55,15 +58,33 @@ function doPost(e) {
     rememberRequest(cache, cacheKey);
     return jsonResponse({ok: true, request_id: p.request_id});
   } catch (error) {
-    const code = error.message === 'page_id' ? 'INVALID_PAGE_ID' : error.message === 'invalid' ? 'INVALID_INPUT' : error.message === 'headers' ? 'SHEET_HEADERS' : 'STORAGE_FAILED';
-    return jsonResponse({ok: false, code, error: code === 'INVALID_PAGE_ID' ? '랜딩 번호가 올바르지 않습니다.' : code === 'INVALID_INPUT' ? '입력 정보를 확인해주세요.' : '시트 저장에 실패했습니다. 배포 권한과 시트 설정을 확인해주세요.'});
+    const errors = {
+      page_id: ['INVALID_PAGE_ID', '랜딩 번호가 올바르지 않습니다.'],
+      request_id: ['INVALID_REQUEST_ID', '접수 요청번호가 올바르지 않습니다.'],
+      name: ['INVALID_NAME', '이름을 확인해주세요.'],
+      phone: ['INVALID_PHONE', '연락처를 확인해주세요.'],
+      consent: ['CONSENT_REQUIRED', '개인정보 수집·이용에 동의해주세요.'],
+      birth: ['INVALID_BIRTH', '생년월일을 확인해주세요.'],
+      invalid: ['INVALID_INPUT', '입력 정보를 확인해주세요.'],
+      headers: ['SHEET_HEADERS', '접수 시트의 열 제목 설정을 확인해주세요.'],
+    };
+    const failure = errors[error.message] || ['STORAGE_FAILED', '시트 저장에 실패했습니다. 배포 권한과 시트 설정을 확인해주세요.'];
+    return jsonResponse({ok: false, code: failure[0], error: failure[1]});
   } finally {
     if (lock && lock.hasLock()) lock.releaseLock();
   }
 }
 
+function requestCache() {
+  try { return CacheService.getScriptCache(); } catch (_) { return null; }
+}
+
+function cachedRequest(cache, key) {
+  try { return Boolean(cache && cache.get(key)); } catch (_) { return false; }
+}
+
 function rememberRequest(cache, key) {
-  try { cache.put(key, 'saved', 21600); } catch (_) { /* The sheet remains the source of truth. */ }
+  try { if (cache) cache.put(key, 'saved', 21600); } catch (_) { /* The sheet remains the source of truth. */ }
 }
 
 function safeCell(value) {

@@ -22,18 +22,8 @@ export async function submitConsultation(payload: Record<string, unknown>, reque
     if (!response.ok) throw new ConsultationError('저장 서버에 연결하지 못했습니다. 잠시 후 다시 시도해주세요.', 'HTTP_ERROR');
     const result = await response.json();
     if (result.ok !== true) {
-      // Diagnose the old two-page receiver only after a rejection, without extra
-      // network requests on successful submissions or changing the payload.
-      if (!result.code && /^aa\d{4}$/.test(String(payload.page_id)) && !['aa0001', 'aa0002'].includes(String(payload.page_id))) {
-        let service;
-        try {
-          const status = await fetch(ENDPOINT, {signal: controller.signal, credentials: 'omit'});
-          if (status.ok) service = await status.json();
-        } catch { /* Preserve the receiver's original failure. */ }
-        if (service?.service === 'landing-consultation' && service.version === 1) {
-          throw new ConsultationError('현재 이 페이지의 상담 접수를 처리할 수 없습니다. 관리자에게 문의해주세요.', 'RECEIVER_UPDATE_REQUIRED');
-        }
-      }
+      // Preserve the actual rejection. A manually edited version number does
+      // not prove which landing IDs the receiver accepts.
       throw new ConsultationError(result.error || '저장 결과를 확인하지 못했습니다. 잠시 후 다시 시도해주세요.', result.code || 'RECEIVER_REJECTED');
     }
     if (result.request_id !== requestId) throw new ConsultationError('저장 확인 번호가 일치하지 않습니다. 같은 내용으로 다시 시도해주세요.', 'REQUEST_ID_MISMATCH');

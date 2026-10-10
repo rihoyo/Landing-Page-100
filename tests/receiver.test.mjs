@@ -4,7 +4,7 @@ import vm from 'node:vm';
 import {readFileSync} from 'node:fs';
 
 const source = readFileSync(new URL('../apps-script/Code.gs', import.meta.url), 'utf8');
-function receiver({legacy = false, cacheEnabled = true} = {}) {
+function receiver({legacy = false, cacheEnabled = true, cacheThrows = false} = {}) {
   const rows = [];
   const cache = new Map();
   let scans = 0;
@@ -31,7 +31,7 @@ function receiver({legacy = false, cacheEnabled = true} = {}) {
     ContentService: {MimeType: {JSON: 'json'}, createTextOutput: value => ({value, setMimeType() {return this;}})},
     SpreadsheetApp: {openById: () => {opens++;return {getSheetByName: () => sheet};}, flush() {}},
     LockService: {getScriptLock: () => ({waitLock() {}, hasLock: () => true, releaseLock() {}})},
-    CacheService: {getScriptCache: () => ({get: key => cacheEnabled ? cache.get(key) : null, put: (key, value) => cache.set(key, value)})},
+    CacheService: {getScriptCache: () => {if (cacheThrows) throw new Error('Cache unavailable'); return {get: key => cacheEnabled ? cache.get(key) : null, put: (key, value) => cache.set(key, value)};}},
     Utilities: {formatDate: (_, __, format) => format === 'yyyyMMdd' ? '20261010' : '2026-10-10 16:00:00'},
   });
   vm.runInContext(source, context);
@@ -82,8 +82,8 @@ test('expired cache still deduplicates against persisted sheet data', () => {
 test('invalid page identifiers, consent and dates never append rows', () => {
   const api = receiver();
   for (const id of ['aa/0003', 'aa0000', 'unknown', 'aa00030']) assert.equal(api.submit(payload(id)).code, 'INVALID_PAGE_ID');
-  assert.equal(api.submit({...payload('aa0003'), agree: ''}).code, 'INVALID_INPUT');
-  assert.equal(api.submit({...payload('aa0003'), birth: '20260230'}).code, 'INVALID_INPUT');
+  assert.equal(api.submit({...payload('aa0003'), agree: ''}).code, 'CONSENT_REQUIRED');
+  assert.equal(api.submit({...payload('aa0003'), birth: '20260230'}).code, 'INVALID_BIRTH');
   assert.equal(api.submit({...payload('aa0003'), website_alt: 'spam'}).code, 'INVALID_INPUT');
   assert.equal(api.rows.length, 0);
 });
@@ -91,4 +91,19 @@ test('spreadsheet formulas are stored as inert text', () => {
   const api = receiver();
   api.submit(payload('aa0003'));
   assert(api.rows[1][11].startsWith("'="));
+});
+
+test('optional cache outage does not prevent saving or duplicate protection', () => {
+  const api = receiver({cacheThrows: true});
+  assert.equal(api.submit(payload('aa0003')).ok, true);
+  assert.equal(api.submit(payload('aa0003')).duplicate, true);
+  assert.equal(api.rows.length, 2);
+});
+test('field-specific diagnostics distinguish invalid input from sheet failures', () => {
+  const api = receiver();
+  assert.equal(api.submit({...payload('aa0003'), phone: '1234'}).code, 'INVALID_PHONE');
+  assert.equal(api.submit({...payload('aa0003'), name: 'A'}).code, 'INVALID_NAME');
+  assert.equal(api.submit({...payload('aa0003'), request_id: 'short'}).code, 'INVALID_REQUEST_ID');
+  api.rows.push(['wrong headers']);
+  assert.equal(api.submit(payload('aa0003')).code, 'SHEET_HEADERS');
 });
