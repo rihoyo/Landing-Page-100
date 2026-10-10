@@ -3,3 +3,6 @@ dist/
 data/
 .env
 *.log
+
+# Build-only static rendering bundle
+.prerender/

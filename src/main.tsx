@@ -1,11 +1,12 @@
-import { StrictMode } from 'react'
+import { StrictMode } from 'react';
+import { createRoot, hydrateRoot } from 'react-dom/client';
+import './index.css';
+import { loadApp } from './App';
 
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
-
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+// Keep the pre-rendered screen visible while connecting form and click handlers.
+void loadApp().then(app => {
+  const root = document.getElementById('root')!;
+  const screen = <StrictMode>{app}</StrictMode>;
+  if (root.hasChildNodes()) hydrateRoot(root, screen);
+  else createRoot(root).render(screen);
+});

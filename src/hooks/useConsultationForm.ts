@@ -11,9 +11,12 @@ export function useConsultationForm() {
   const composingName = useRef(false);
   const pendingRequest = useRef<{id: string; fingerprint: string} | null>(null);
   const sending = useRef(false);
-  const [initialLimit] = useState(readSubmissionLimit);
-  const limit = useRef(initialLimit);
-  const [remaining, setRemaining] = useState(() => Math.max(0, Math.ceil((limit.current.blockedUntil - Date.now()) / 1000)));
+  const limit = useRef({attempts: [] as number[], blockedUntil: 0});
+  const [remaining, setRemaining] = useState(0);
+  useEffect(() => {
+    limit.current = readSubmissionLimit();
+    setRemaining(Math.max(0, Math.ceil((limit.current.blockedUntil - Date.now()) / 1000)));
+  }, []);
   const isBlocked = remaining > 0;
   useEffect(() => {
     if (!isBlocked) return;
