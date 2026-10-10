@@ -14,6 +14,7 @@ import HeroAlternative from "./designs/HeroAlternative";
 export default function Home({pageId}: {pageId: "aa0001" | "aa0002"}) {
   return (
     <div className={`min-h-screen bg-background-50 design-${pageId}`} data-page-id={pageId}>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.min.css" precedence="icons" />
       <SiteHeader />
       <main>
         {pageId === "aa0002" ? <HeroAlternative /> : <HeroSection />}
