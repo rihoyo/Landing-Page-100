@@ -4,12 +4,13 @@ import vm from 'node:vm';
 import {readFileSync} from 'node:fs';
 
 const source = readFileSync(new URL('../apps-script/Code.gs', import.meta.url), 'utf8');
-function receiver({legacy = false, cacheEnabled = true, cacheThrows = false} = {}) {
+function receiver({legacy = false, cacheEnabled = true, cacheThrows = false, routes = []} = {}) {
   const rows = [];
   const cache = new Map();
   let scans = 0;
   let opens = 0;
-  const sheet = {
+  const sheets = new Map();
+  function makeSheet(rows) { return {
     getLastRow: () => rows.length,
     appendRow: row => rows.push([...row]),
     setFrozenRows() {},
@@ -27,17 +28,27 @@ function receiver({legacy = false, cacheEnabled = true, cacheThrows = false} = {
       };
     },
   };
+  };
+  const sheet = makeSheet(rows);
   const context = vm.createContext({
     ContentService: {MimeType: {JSON: 'json'}, createTextOutput: value => ({value, setMimeType() {return this;}})},
-    SpreadsheetApp: {openById: () => {opens++;return {getSheetByName: () => sheet};}, flush() {}},
+    SpreadsheetApp: {openById: id => {
+      opens++;
+      return {getSheetByName: name => {
+        const key = `${id}:${name}`;
+        if (name === '상담신청 테스트') return sheet;
+        if (!sheets.has(key)) sheets.set(key, []);
+        return makeSheet(sheets.get(key));
+      }};
+    }, flush() {}},
     LockService: {getScriptLock: () => ({waitLock() {}, hasLock: () => true, releaseLock() {}})},
     CacheService: {getScriptCache: () => {if (cacheThrows) throw new Error('Cache unavailable'); return {get: key => cacheEnabled ? cache.get(key) : null, put: (key, value) => cache.set(key, value)};}},
     Utilities: {formatDate: (_, __, format) => format === 'yyyyMMdd' ? '20261010' : '2026-10-10 16:00:00'},
   });
-  vm.runInContext(source, context);
+  vm.runInContext(source.replace('const STORAGE_ROUTES = [', `const STORAGE_ROUTES = [${routes.map(r => JSON.stringify(r)).join(',')}${routes.length ? ',' : ''}`), context);
   if (legacy) rows.push([...vm.runInContext('HEADERS.slice(0, -1)', context)], ['old row', 'existing-request', 'aa0001', '기존고객']);
   const submit = payload => JSON.parse(context.doPost({postData: {contents: JSON.stringify(payload)}}).value);
-  return {submit, rows, scans: () => scans, opens: () => opens, status: () => JSON.parse(context.doGet().value)};
+  return {submit, rows, sheets, changeRoutes: next => { context.nextRoutes = next; vm.runInContext("STORAGE_ROUTES.splice(0, STORAGE_ROUTES.length, ...nextRoutes)", context); }, scans: () => scans, opens: () => opens, status: () => JSON.parse(context.doGet().value)};
 }
 const payload = (pageId, requestId = 'test-request-123456789') => ({
   page_id: pageId, request_id: requestId, name: '테스트', phone: '01000000000',
@@ -106,4 +117,41 @@ test('field-specific diagnostics distinguish invalid input from sheet failures',
   assert.equal(api.submit({...payload('aa0003'), request_id: 'short'}).code, 'INVALID_REQUEST_ID');
   api.rows.push(['wrong headers']);
   assert.equal(api.submit(payload('aa0003')).code, 'SHEET_HEADERS');
+});
+
+
+test('inclusive routing boundaries select tabs or another document and preserve default fallback', () => {
+  const api = receiver({routes: [
+    {from: 3, to: 20, sheetName: '건강보험 상담'},
+    {from: 21, to: 50, spreadsheetId: 'other-document', sheetName: '별도 상담'},
+  ]});
+  for (const n of [1, 2, 3, 20, 21, 50, 51, 9999]) {
+    const id = `aa${String(n).padStart(4, '0')}`;
+    assert.equal(api.submit(payload(id, `route-test-${id}-123456`)).ok, true);
+  }
+  assert.deepEqual(api.rows.slice(1).map(r => r[2]), ['aa0001', 'aa0002', 'aa0051', 'aa9999']);
+  const first = [...api.sheets.values()][0];
+  assert.deepEqual(first.slice(1).map(r => r[2]), ['aa0003', 'aa0020']);
+  assert.deepEqual(api.sheets.get('other-document:별도 상담').slice(1).map(r => r[2]), ['aa0021', 'aa0050']);
+});
+test('overlapping and invalid routing configuration fail before opening a document', () => {
+  for (const routes of [
+    [{from: 3, to: 20, sheetName: 'A'}, {from: 20, to: 30, sheetName: 'B'}],
+    [{from: 0, to: 20, sheetName: 'A'}],
+    [{from: 20, to: 3, sheetName: 'A'}],
+    [{from: 3, to: 10000, sheetName: 'A'}],
+    [{from: 3, to: 20, sheetName: ' '}],
+  ]) {
+    const api = receiver({routes});
+    assert.equal(api.submit(payload('aa0003')).code, 'ROUTING_CONFIG');
+    assert.equal(api.opens(), 0);
+  }
+});
+test('routing change does not reuse a success cached for the previous destination', () => {
+  const api = receiver();
+  assert.equal(api.submit(payload('aa0003')).ok, true);
+  api.changeRoutes([{from: 3, to: 3, sheetName: '새 저장 위치'}]);
+  assert.equal(api.submit(payload('aa0003')).duplicate, undefined);
+  assert.equal([...api.sheets.values()][0].length, 2);
+  assert.equal(api.submit(payload('aa0003')).duplicate, true);
 });
