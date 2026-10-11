@@ -1,0 +1,34 @@
+AND(
+  OR(
+    ISBLANK(USERSETTINGS("시작일")),
+    [접수일] >= USERSETTINGS("시작일")
+  ),
+  OR(
+    ISBLANK(USERSETTINGS("종료일")),
+    [접수일] <= USERSETTINGS("종료일")
+  ),
+  OR(
+    ISBLANK(USERSETTINGS("랜딩선택")),
+    USERSETTINGS("랜딩선택") = "전체",
+    [랜딩번호] = USERSETTINGS("랜딩선택")
+  ),
+  OR(
+    ISBLANK(USERSETTINGS("지역선택")),
+    USERSETTINGS("지역선택") = "전체",
+    [주거지역] = USERSETTINGS("지역선택")
+  ),
+  OR(
+    ISBLANK(USERSETTINGS("최소나이")),
+    AND(
+      ISNOTBLANK([나이]),
+      [나이] >= USERSETTINGS("최소나이")
+    )
+  ),
+  OR(
+    ISBLANK(USERSETTINGS("최대나이")),
+    AND(
+      ISNOTBLANK([나이]),
+      [나이] <= USERSETTINGS("최대나이")
+    )
+  )
+)

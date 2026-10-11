@@ -48,3 +48,6 @@ Node.js 24를 사용합니다. GitHub Pages 경로 검증은 `VITE_BASE_PATH=/La
 
 
 코드 수정 위치와 신청 처리 흐름은 [코드 구조 안내](docs/code-structure.md)를 참고하세요. `npm run format`으로 정리하고 `npm run format:check`로 형식을 검사할 수 있습니다.
+
+
+스프레드시트의 상담 데이터를 AppSheet로 조회하는 [대시보드 설정 안내](docs/appsheet/README.md)와 [맞춤 목록 필터식](docs/appsheet/filtered-receipts.txt)을 제공합니다. AppSheet 앱 생성·계정 권한·배포는 별도 Google 계정에서 설정해야 합니다.
