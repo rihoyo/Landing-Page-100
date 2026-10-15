@@ -901,6 +901,7 @@
   }
   .section5 .left h3 {
     position: relative;
+    isolation: isolate;
     padding-left: 40px;
     font-size: 2.5rem;
     font-weight: 700;

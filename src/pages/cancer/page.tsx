@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import Content from './Content';
+import RequiredNotice from './RequiredNotice';
 import './cancer.css';
 
 // 상담 버튼은 가까운 신청서로 이동하고 신청자·보험사 슬라이드를 순환합니다.
@@ -29,6 +30,7 @@ export default function Cancer() {
       }}
     >
       <Content />
+      <RequiredNotice />
       <div className="cancer-footer">
         <div>
           <p>보험대리점 : 메가(주) (등록번호 : 제2005108004호)</p>
