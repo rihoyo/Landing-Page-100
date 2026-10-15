@@ -9,6 +9,10 @@ export async function loadApp() {
   const path = relative.replace(/\/+$/, '') || '/';
   const route = landingRoutes.find((route) => route.paths.some((p) => p === path));
 
+  if (route?.id === 'aa0004') {
+    const { default: Cancer } = await import('./pages/cancer/page');
+    return <Cancer />;
+  }
   if (route?.id === 'aa0003') {
     const { default: Health } = await import('./pages/health/page');
     return <Health />;

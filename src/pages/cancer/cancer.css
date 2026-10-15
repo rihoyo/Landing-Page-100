@@ -1,0 +1,1466 @@
+@font-face {
+  font-family: Pretendard;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('../../../public/font/Pretendard-1.3.9/web/variable/woff2/PretendardVariable.woff2')
+    format('woff2');
+}
+@font-face {
+  font-family: GmarketSans;
+  font-weight: 300;
+  src: url('../../../public/assets/cancer/gmarketsansttflight.woff2');
+}
+@font-face {
+  font-family: GmarketSans;
+  font-weight: 500;
+  src: url('../../../public/assets/cancer/gmarketsansttfmedium.woff2');
+}
+@font-face {
+  font-family: GmarketSans;
+  font-weight: 700;
+  src: url('../../../public/assets/cancer/gmarketsansttfbold.woff2');
+}
+@scope (.cancer-page) {
+  div,
+  span,
+  applet,
+  object,
+  iframe,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  blockquote,
+  pre,
+  a,
+  abbr,
+  acronym,
+  address,
+  big,
+  cite,
+  code,
+  del,
+  dfn,
+  em,
+  img,
+  ins,
+  kbd,
+  q,
+  s,
+  samp,
+  small,
+  strike,
+  strong,
+  sub,
+  sup,
+  tt,
+  var,
+  b,
+  u,
+  i,
+  center,
+  dl,
+  dt,
+  dd,
+  ol,
+  ul,
+  li,
+  fieldset,
+  form,
+  label,
+  legend,
+  table,
+  caption,
+  tbody,
+  tfoot,
+  thead,
+  tr,
+  th,
+  td,
+  article,
+  aside,
+  canvas,
+  details,
+  embed,
+  figure,
+  figcaption,
+  footer,
+  header,
+  hgroup,
+  menu,
+  nav,
+  output,
+  ruby,
+  section,
+  summary,
+  time,
+  mark,
+  audio,
+  video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    font-family: 'Pretendard', sans-serif;
+    vertical-align: baseline;
+  }
+  /* HTML5 display-role reset for older browsers */
+  article,
+  aside,
+  details,
+  figcaption,
+  figure,
+  footer,
+  header,
+  hgroup,
+  menu,
+  nav,
+  section {
+    display: block;
+  }
+  .cancer-page {
+    line-height: 1;
+    letter-spacing: -1px;
+  }
+  ol,
+  ul {
+    list-style: none;
+  }
+  blockquote,
+  q {
+    quotes: none;
+  }
+  blockquote:before,
+  blockquote:after,
+  q:before,
+  q:after {
+    content: '';
+    content: none;
+  }
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+  button {
+    color: inherit;
+    margin: 0;
+    padding: 0;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+  select {
+    font-family: inherit;
+  }
+  .cancer-page {
+    min-width: 1200px;
+  }
+  a {
+    color: #333;
+    text-decoration: none;
+  }
+  .content-wrap {
+    max-width: 1140px;
+    box-sizing: border-box;
+    margin: 0 auto;
+  }
+  .container {
+    max-width: 1140px;
+    padding: 0 70px;
+    margin: 0 auto;
+  }
+  .notScroll {
+    overflow: hidden;
+    width: 100%;
+    height: 100vh;
+    touch-action: none;
+  }
+  .color {
+    color: #f57200;
+  }
+  .d-none {
+    display: none;
+  }
+
+  /* Select box 스타일 초기화 */
+  select {
+    padding: 0 10px 0 4px;
+    /* background: #fff url('arrow.png') no-repeat 100% 50% !important; */
+    border-radius: 0px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    color: inherit;
+    font-family: inherit;
+  }
+
+  select option {
+    color: #000;
+  }
+
+  /* IE 에서 Select box 화살표 제거 */
+  select::-ms-expand {
+    display: none;
+  }
+
+  /* IE10 이상에서 input box 에 추가된 지우기 버튼 제거 */
+  input::-ms-clear {
+    display: none;
+  }
+
+  /* placeholder 초기화 */
+  input::-webkit-input-placeholder {
+    color: #aaa;
+    font-style: normal;
+    font-weight: 100;
+  }
+  input:-ms-input-placeholder {
+    color: #aaa;
+    font-style: normal;
+    font-weight: 100;
+  }
+  textarea::-webkit-input-placeholder {
+    color: #aaa;
+    font-style: normal;
+    font-weight: 100;
+  }
+  textarea:-ms-input-placeholder {
+    color: #aaa;
+    font-style: normal;
+    font-weight: 100;
+  }
+  input::placeholder {
+    font-weight: 400;
+    color: #aaa;
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+    -webkit-transition: background-color 9999s ease-out;
+    -webkit-box-shadow: 0 0 0px 1000px none inset !important;
+  }
+
+  /* alert 버튼 */
+  .btn-box2 {
+    top: 2764px;
+    left: 737px;
+    width: 264px;
+    height: 56px;
+    position: absolute;
+    cursor: pointer;
+  }
+  .btn-box1 {
+    top: 1630px;
+    left: 29px;
+    width: 196px;
+    height: 42px;
+    position: absolute;
+    cursor: pointer;
+  }
+
+  /* header */
+  header {
+    border-bottom: 1px solid #e0e0e0;
+  }
+  .hd-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1140px;
+    padding: 12px 0;
+    margin: 0 auto;
+  }
+  .counseling {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 14px;
+  }
+  .call,
+  .message {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .call-icon,
+  .message-icon {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 8px;
+    background-color: #ffeee3;
+    color: #f57200;
+    border-radius: 5px;
+  }
+
+  /* section1 */
+  .section1 {
+    padding-top: 20px;
+  }
+  .section1 .container {
+    max-width: 1140px;
+    padding: 0 30px;
+    margin: 0 auto;
+  }
+  .section1 .section-box {
+    padding: 42px;
+    background-color: #fff9f2;
+    border-radius: 18px;
+  }
+  .section1 .section-box .title {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+  }
+  .section1 .section-box .title .txt p {
+    font-size: 32px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    letter-spacing: -1px;
+    font-family: 'GmarketSans';
+  }
+  .section1 .section-box .title .txt h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+    line-height: 1.3;
+    font-family: 'GmarketSans';
+  }
+  .section1 .section-box .title .txt .color {
+    font-family: 'GmarketSans';
+  }
+  .section1 .section-box .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 0px;
+  }
+  .section1 .section-box .left-box {
+    padding: 42px 34px;
+    width: 443px;
+    background-color: #fff;
+    border: 1px solid #dedfe1;
+    border-radius: 15px;
+    box-sizing: border-box;
+  }
+  .section1 .section-box .left-box,
+  .section1 .section-box .right-box {
+    box-shadow: 5px 1px 10px rgba(0, 0, 0, 0.1);
+  }
+  .section1 .section-box .left-box h5 {
+    margin-bottom: 30px;
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: -1px;
+  }
+  .section1 .section-box .left-box .field {
+    margin-bottom: 20px;
+  }
+  .section1 .section-box .left-box .field.phone-mb {
+    margin-bottom: 30px;
+  }
+  .section1 .section-box .left-box .label {
+    display: block;
+    margin-bottom: 11px;
+    color: #444444;
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .section1 .section-box .left-box .input,
+  .select,
+  .combo,
+  .readonly {
+    width: 100%;
+    height: 50px;
+    padding: 0 10px;
+    background: #f8f8f8;
+    line-height: 50px;
+    border: 1px solid #e7e8ea;
+    border-radius: 8px;
+    font-size: 18px;
+    color: #111;
+    font-weight: 500;
+    font-family: inherit;
+    outline: none;
+  }
+  .input::placeholder {
+    color: #888888;
+  }
+  .readonly {
+    background: #f8f8f8;
+    color: #b4b9c2;
+  }
+  .name-gender {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .name-gender .name {
+    flex: 1;
+  }
+  .name-gender .gender {
+    border: 1px solid #e7e8ea;
+    border-radius: 8px;
+    display: flex;
+  }
+  .name-gender .gender input[type='radio'] {
+    display: none;
+  }
+  .name-gender .gender label {
+    display: inline-block;
+    width: 50px;
+    aspect-ratio: 1/1;
+    text-align: center;
+    line-height: 50px;
+    color: #888888;
+    font-weight: 500;
+    font-size: 18px;
+  }
+  .name-gender .gender input:checked + label {
+    background-color: #f57200;
+    color: #fff;
+    border-radius: 8px;
+    border: 1px solid #f57200;
+  }
+  .gender .group {
+    display: flex;
+    border: 1px solid #e7e8ea;
+    border-radius: 12px;
+    background: #fff;
+  }
+  .section1 .section-box .left-box .phone {
+    display: grid;
+    grid-template-columns: 78px 1fr;
+    gap: 10px;
+  }
+  .select {
+    appearance: none;
+    background: #f8f8f8
+      url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="%23999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>')
+      no-repeat right 5px center;
+  }
+  .confirm_wrap {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+  .agree {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    margin-bottom: 6px;
+    color: #6b7280;
+    font-size: 18px;
+    position: relative;
+    justify-content: center;
+  }
+  .agree:last-of-type {
+    margin-bottom: 0;
+  }
+  .agree button {
+    text-decoration: underline;
+    transform: translateY(-1px);
+  }
+  .agree label {
+    cursor: pointer;
+  }
+  .agree input {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translate(0, -50%);
+    width: 20px;
+    aspect-ratio: 1/1;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 1;
+  }
+  .agree .agree-icon {
+    width: 20px;
+    aspect-ratio: 1/1;
+    box-sizing: border-box;
+    border: 2px solid #888;
+    border-radius: 100%;
+    position: relative;
+    flex-shrink: 1;
+    transition: all 0.2s ease;
+  }
+  .agree .agree-icon::after {
+    content: '';
+    position: absolute;
+    width: 7px;
+    height: 4px;
+    border: solid #888;
+    border-width: 0 0 2px 2px;
+    top: 5px;
+    left: 4px;
+    transform: rotate(-45deg);
+    transition: all 0.2s ease;
+  }
+  .agree input:checked + .agree-icon {
+    background-color: #f57200;
+    border: 2px solid #f57200;
+  }
+  .agree input:checked + .agree-icon::after {
+    border: solid #fff;
+    border-width: 0 0 2px 2px;
+  }
+  .form_btn_wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 30px;
+  }
+  .submit {
+    width: 100%;
+    height: 56px;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+  }
+  .submit.btn1 img {
+    width: 18px;
+  }
+  .submit.btn2 img {
+    width: 24px;
+  }
+  .submit.btn1 {
+    background: #f57200;
+    flex: 1;
+    min-width: 0;
+  }
+  .submit.btn2 {
+    background: #d2cdcd;
+    flex: 1;
+    min-width: 0;
+  }
+  .right-box {
+    padding: 38px 34px;
+    width: 443px;
+    background-color: #fff;
+    border: 1px solid #fcdabd;
+    border-radius: 15px;
+    box-sizing: border-box;
+  }
+  .insure-title {
+    margin: 0 0 40px;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #111111;
+    text-align: center;
+  }
+  .insure-banner {
+    padding: 14px 16px;
+    margin-bottom: 18px;
+    background: #fff9f2;
+    border-radius: 8px;
+    text-align: center;
+    color: #555555;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  .insure-banner p {
+    font-size: 14px;
+    letter-spacing: -0.5px;
+  }
+  .insure-banner p.bold {
+    font-weight: 700;
+    font-size: 18px;
+    color: #010101;
+  }
+  .insurer-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .insurer-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 90px;
+    background: #ffffff;
+    border: 1px solid #ede7e1;
+    border-radius: 12px;
+    transition:
+      transform 0.12s ease,
+      box-shadow 0.12s ease,
+      border-color 0.12s ease;
+  }
+  .insurer-item:hover {
+    transform: translateY(-2px);
+    border-color: #ffd0a6;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  }
+  .insurer-item img {
+    height: 18px;
+  }
+  .insurer-item.db-logo img {
+    height: 30px;
+  }
+  .insurer-item .price {
+    margin-top: 12px;
+    font-size: 16px;
+    color: #ff7a00;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+    background-color: #fff9f2;
+  }
+  .insurer-item .price em {
+    font-style: normal;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 2px;
+    text-decoration-color: #ffa760;
+    color: #ff7a00;
+  }
+  .section-box.section-box2 {
+    padding-bottom: 0;
+    height: 260px;
+    box-sizing: border-box;
+    display: flex;
+  }
+  .section-box2 .txt {
+    float: left;
+    margin-right: 100px;
+    flex-shrink: 0;
+  }
+  .section-box2 .txt p {
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: -1px;
+  }
+  .section-box2 .txt h5 {
+    font-size: 2.5rem;
+    font-weight: 700;
+  }
+  .section-box2 .slide-now {
+    flex: 1;
+    min-width: 0;
+  }
+  .section-box2 .slide-now .mySwiper .swiper-slide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    height: 180px;
+    border-radius: 10px;
+    text-align: center;
+    gap: 6px;
+  }
+  .section-box2 .slide-now .mySwiper .swiper-slide .now {
+    background-color: #f0f0f0;
+    font-size: 12px;
+    padding: 3px 5px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+  }
+  .section-box2 .slide-now .mySwiper .swiper-slide p {
+    font-size: 20px;
+    font-weight: 600;
+  }
+  .section-box2 .slide-now .mySwiper .swiper-slide .phone {
+    font-size: 14px;
+    letter-spacing: -0.5px;
+  }
+
+  /* section2 */
+  .section2 {
+    padding: 80px 0 60px;
+    text-align: center;
+    box-shadow: 0 40px 17px -33px rgba(0, 0, 0, 0.1);
+  }
+  .section2 h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  .section2 .quote {
+    position: relative;
+    display: inline-block;
+  }
+  .section2 .quote.quote_left::after {
+    content: url('../../../public/assets/cancer/Img/section2-left.png');
+    position: absolute;
+    left: -30px;
+    top: -40px;
+  }
+  .section2 .quote.quote_right:after {
+    content: url('../../../public/assets/cancer/Img/section2-right.png');
+    position: absolute;
+    right: -25px;
+    top: -8px;
+  }
+  .section2 .slide-now {
+    margin-top: 30px;
+    height: 100px;
+  }
+  .section2 .slide-now .logoSide .swiper-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .section2 .slide-now .logoSide .swiper-slide img {
+    max-width: 180px;
+  }
+  .section2 .slide-now .logoSide .swiper-slide.db-logo img {
+    max-height: 60px;
+  }
+  .section2 .slide-now .logoSide .swiper-slide.sam-logo img {
+    max-height: 36px;
+  }
+
+  /* section3 */
+  .section3 {
+    padding: 150px 0 80px;
+  }
+  .section3 h3 {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+  }
+  .section3 .subpage-tab-list {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 70px 0 40px;
+  }
+  .section3 .subpage-tab-list li {
+    width: 50%;
+    padding-bottom: 20px;
+    text-align: center;
+    color: #dedfe1;
+    border-bottom: 2px solid #dedfe1;
+    cursor: pointer;
+    font-size: 1.5rem;
+  }
+  .section3 .subpage-tab-list li.acc {
+    color: #0f0f0f;
+    border-bottom-color: #0f0f0f;
+    font-weight: 700;
+  }
+  .section3 .subpage-tab-content ul {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  .section3 .subpage-tab-content ul li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 25px 25px 0;
+    border: 1px solid #e2e3e5;
+    border-radius: 12px;
+  }
+  .section3 .subpage-tab-content ul li .list-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section3 .subpage-tab-content ul li .list-logo .img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 210px;
+  }
+  .section3 .subpage-tab-content ul li .list-logo .img img {
+    width: 150px;
+  }
+  .section3 .subpage-tab-content ul li .list-logo .img.sam-logo img {
+    width: 100px;
+  }
+  .section3 .subpage-tab-content ul li .list-logo .img.hd-logo img {
+    width: 120px;
+  }
+  .section3 .subpage-tab-content ul li .list-logo p {
+    font-size: 20px;
+    font-weight: 500;
+  }
+  .section3 .subpage-tab-content ul li .right_wrap {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .section3 .subpage-tab-content ul li .right_wrap .hide_price {
+    font-size: 28px;
+    font-weight: 700;
+  }
+  .section3 .subpage-tab-content ul li .right_wrap .hide_price span {
+    color: #ee0000;
+    margin-right: 10px;
+  }
+  .section3 .subpage-tab-content ul li button {
+    padding: 10px 15px;
+    background-color: #f57200;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 17px;
+    font-weight: 500;
+  }
+  .section3 .click-color {
+    color: #ffc800;
+    font-weight: 600;
+  }
+  .section3 .subpage-tab-content {
+    display: none;
+    margin-top: 70px;
+  }
+  .section3 .subpage-tab-content.acc {
+    display: block;
+  }
+
+  .section4 h3 {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 35px;
+  }
+  .section4 .sub-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .section4 span.color.bg {
+    display: inline-block;
+    padding: 10px 25px;
+    background-color: #ffeee3;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: 500;
+  }
+  .section4 ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .section4 ul li {
+    width: 320px;
+    height: 363px;
+    padding: 35px 30px;
+    background-color: #f8f8f8;
+    box-sizing: border-box;
+    border-radius: 15px;
+    letter-spacing: -1px;
+  }
+  .section4 ul li p.title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #0f0f0f;
+  }
+  .section4 ul li p {
+    font-size: 20px;
+    color: #373737;
+    line-height: 1.4;
+    margin-bottom: 30px;
+  }
+  .section4 ul li .img-right {
+    display: flex;
+    align-items: end;
+    justify-content: end;
+  }
+
+  .section5 {
+    padding: 170px 0 0px;
+  }
+  .section5 .container {
+    display: flex;
+    justify-content: space-between;
+  }
+  .section5 .left h3 {
+    position: relative;
+    padding-left: 40px;
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  .section5 .left h3::before {
+    content: '01';
+    position: absolute;
+    left: 0;
+    top: -50px;
+    font-size: 96px;
+    font-weight: 800;
+    color: #fdeee5;
+    line-height: 1;
+    z-index: -1;
+  }
+
+  .section5 dl + dl {
+    margin-top: 20px;
+  }
+  .section5 dl {
+    background-color: #f8f8f8;
+    padding: 30px;
+    border-radius: 15px;
+    box-sizing: border-box;
+    width: 490px;
+  }
+  .section5 dt {
+    position: relative;
+    padding-left: 35px;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  .section5 dt::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: -2px;
+    width: 30px;
+    height: 30px;
+    background: url('../../../public/assets/cancer/Img/check-circle.png') no-repeat center/contain;
+  }
+  .section5 dd {
+    font-size: 18px;
+    color: #444444;
+    line-height: 1.4;
+    border-radius: 12px;
+    padding-left: 35px;
+  }
+
+  .section6 .left h3::before {
+    content: '02';
+  }
+
+  .section7 .left h3::before {
+    content: '03';
+  }
+  .section7 .left {
+    flex: 1;
+  }
+  .section7 .right {
+    display: flex;
+    gap: 20px;
+  }
+  .section5.section7 dl {
+    width: 304px;
+    padding: 20px;
+  }
+  .section5.section7 dt::before,
+  .section5.section8 dt::before {
+    display: none;
+  }
+  .section5.section7 dt,
+  .section5.section8 dt {
+    padding-left: 0;
+  }
+  .section5.section7 dd {
+    position: relative;
+    padding-left: 28px;
+  }
+  .section5.section7 dd::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    width: 4px;
+    height: 4px;
+    background-color: #444444;
+    border-radius: 50%;
+  }
+  .section5.section7 dd.bottom-check::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 8px;
+    width: 24px;
+    height: 24px;
+    background: url('../../../public/assets/cancer/Img/check-badge.png') no-repeat center/contain;
+  }
+  .section5.section7 dd.bottom-check {
+    background-color: #ffeee3;
+    color: #f57200;
+    padding: 10px 0 10px 38px;
+    margin-top: 15px;
+  }
+  .section5.section7 dd.bottom-check.bottom-check2 {
+    margin-top: 40px;
+  }
+  .section5.section7 dl + dl,
+  .section5.section8 dl + dl {
+    margin-top: 0px;
+  }
+
+  .section8 .left h3::before {
+    content: '04';
+  }
+  .section8 .right .right-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .right p {
+    text-align: right;
+    color: #848484;
+    margin-top: 20px;
+  }
+  .right p + p {
+    margin-top: 8px;
+  }
+  .section5.section8 dd {
+    padding-left: 0;
+  }
+  .section5.section8 dl {
+    position: relative;
+    width: 258px;
+    height: 180px;
+  }
+  .section5.section8 dl dd img {
+    position: absolute;
+    bottom: 18px;
+    right: 18px;
+  }
+
+  .benner {
+    width: 1000px;
+    position: relative;
+    height: 240px;
+    margin: 100px auto 80px;
+    background-image: url('../../../public/assets/cancer/Img/benner-bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 35px 42px;
+    box-sizing: border-box;
+  }
+  .benner img {
+    position: absolute;
+    bottom: 0;
+    right: 40px;
+  }
+  .benner h3 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  .benner p {
+    font-size: 1.5rem;
+    line-height: 1.4;
+    color: #333;
+    margin-top: 10px;
+    letter-spacing: -1px;
+  }
+
+  .section9 {
+    background-color: #fff9f2;
+    padding: 70px 0;
+  }
+  .section9 h3 {
+    margin-bottom: 45px;
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  /* section_bottom */
+  .ft-section {
+    padding: 50px 0;
+    color: #333;
+  }
+  .ft-section h6 {
+    margin-bottom: 30px;
+    font-size: 25px;
+    font-weight: 700;
+  }
+  .ft-section ul li {
+    color: #666;
+    position: relative;
+    font-size: 18px;
+    line-height: 1.4;
+    margin-bottom: 10px;
+    letter-spacing: -0.5px;
+  }
+  .ft-section p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #666;
+    letter-spacing: -0.5px;
+  }
+
+  /* 푸터 */
+  .footer {
+    background: #fff;
+    box-sizing: border-box;
+    padding: 50px 0;
+    width: 100%;
+  }
+  .footer .f-cont {
+    color: #333;
+    overflow: hidden;
+  }
+  .footer .f-cont > div p {
+    margin-bottom: 10px;
+    font-size: 15px;
+  }
+  .footer .f-copy {
+    margin-top: 20px;
+    color: #333;
+    font-size: 15px;
+    text-align: right;
+  }
+  .footer .f-copy p {
+    margin-bottom: 15px;
+  }
+  .footer .mt {
+    margin-top: 20px;
+  }
+  .footer .f-logo {
+    position: absolute;
+    top: -15px;
+    right: 0;
+    text-align: right;
+  }
+  .footer a {
+    color: #999;
+    margin-bottom: 10px;
+    display: inline-block;
+    margin-top: 21px;
+    letter-spacing: -0.5px;
+  }
+
+  #ajax_loding {
+    position: fixed;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    font-size: 30px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    display: none;
+  }
+  .round {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #sampleList_ul li:first-child .price_blind {
+    display: none;
+  }
+  #sampleList_ul li:first-child .price_num {
+    display: inline;
+  }
+  #sampleList_ul li .price_blind {
+    display: inline;
+  }
+  #sampleList_ul li .price_num {
+    display: none;
+  }
+
+  #sampleTable {
+    width: 100%;
+    margin: 0 auto;
+    vertical-align: middle;
+    position: relative;
+    z-index: 9;
+    margin-top: 70px;
+  }
+  .bh_name {
+    display: flex;
+    align-items: center;
+    width: 202px;
+    max-width: 20%;
+    justify-content: center;
+  }
+  .product {
+    vertical-align: middle;
+    font-size: 20px;
+    font-weight: bold;
+    max-width: 55%;
+    width: 550px;
+    word-break: keep-all;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    line-height: 1.4;
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    justify-content: center;
+    padding: 0 40px;
+    flex-direction: column;
+  }
+  #sampleTbody .price {
+    vertical-align: middle;
+    font-size: 18px;
+    text-align: center;
+    width: 165px;
+    max-width: 20%;
+    padding: 15px 20px;
+  }
+  .bh_number {
+    font-size: 14px;
+    color: #999;
+    display: block;
+    margin-top: 5px;
+  }
+  #sampleTbody {
+    flex-direction: column;
+    border-radius: 80px;
+    background-color: #fff;
+    display: none;
+    gap: 15px;
+  }
+  .price_num {
+    font-size: 20px;
+    color: #f44;
+    font-weight: bold;
+    cursor: inherit !important;
+    position: relative;
+  }
+  #sampleTable tr:first-child .wonbg {
+    display: none;
+  }
+  .wonbg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #ff7a00;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: 500;
+    font-size: 17px;
+    width: 100%;
+    height: 100%;
+  }
+  .wonbg b {
+    color: #ffc800;
+    font-weight: 600;
+    margin-left: 4px;
+  }
+  .wonbg.on {
+    display: none;
+  }
+  .jasehi {
+    margin: 5px 0;
+    color: #fff;
+    border-radius: 5px;
+    background-color: #3a3a3a;
+    font-weight: 600;
+    margin-top: 8px !important;
+    font-size: 17px;
+  }
+  .price > div,
+  .price > a {
+    margin: 5px 0;
+    cursor: pointer;
+    width: 180px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .gaip {
+    background: #333;
+    color: #fff;
+  }
+  #sampleTable tr {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    border: 1px solid #e2e3e5;
+    border-radius: 12px;
+  }
+  .insuTitle {
+    width: 1100px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 45px;
+    font-weight: 900;
+    background: #ff4600;
+    color: #fff;
+    padding: 30px 0;
+    border-radius: 20px 20px 0 0;
+    border: 2px solid #333;
+    border-bottom: 0;
+    box-shadow: 5px 5px #999;
+    position: relative;
+    z-index: 8;
+    display: none;
+  }
+  .info2 div .i2_bg {
+    position: absolute;
+    top: -4px;
+    left: 0;
+    background: #ff4600;
+    color: #fff;
+    display: flex;
+    width: 133px;
+    height: 38px;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 0;
+  }
+  .info2 div .i2_bg.on {
+    display: none;
+  }
+  .i2_price {
+    position: relative;
+    width: 133px;
+    text-align: center;
+  }
+  .info2 div:first-child .i2_bg {
+    display: none;
+  }
+}
+body:has(.cancer-page) {
+  background: #fff;
+}
+.cancer-page {
+  min-width: 1200px;
+  background: #fff;
+  color: #111;
+  line-height: 1;
+  letter-spacing: -1px;
+  font-family: Pretendard, sans-serif;
+}
+@scope (.cancer-page) {
+  img {
+    display: inline;
+    max-width: none;
+    vertical-align: baseline;
+  }
+  input {
+    box-sizing: border-box;
+  }
+  .form-trap,
+  .cancer-validation-phone {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .swiper {
+    overflow: hidden;
+  }
+  .swiper-wrapper {
+    display: flex;
+    align-items: center;
+  }
+  .customer_swiper .swiper-slide {
+    flex: 0 0 calc((100% - 60px) / 5);
+    margin-right: 15px;
+  }
+  .logoSide .swiper-slide {
+    flex: 0 0 calc((100% - 120px) / 5);
+    margin-right: 30px;
+  }
+  .cancer-error {
+    color: #b42318;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 12px 0;
+  }
+  .cancer-success {
+    line-height: 1.7;
+    padding: 40px 0;
+    text-align: center;
+  }
+  .cancer-success button {
+    margin-top: 20px;
+    color: #f57200;
+  }
+  .cancer-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: #0008;
+    display: grid;
+    place-items: center;
+  }
+  .cancer-modal {
+    background: white;
+    padding: 36px;
+    border-radius: 16px;
+    max-width: 500px;
+    line-height: 1.8;
+  }
+  .cancer-modal h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  .cancer-modal button {
+    display: block;
+    background: #f57200;
+    color: white;
+    padding: 12px 32px;
+    margin: 24px auto 0;
+    border-radius: 8px;
+  }
+  .cancer-footer {
+    background: #282a29;
+    padding: 30px 0;
+    color: #999;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .cancer-footer > div {
+    width: 1000px;
+    margin: auto;
+  }
+  .message,
+  .benner {
+    cursor: pointer;
+  }
+  button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+  :focus-visible {
+    outline: 2px solid #f57200;
+    outline-offset: 3px;
+  }
+}

@@ -7,7 +7,12 @@ const manifest = JSON.parse(readFileSync('dist/.vite/manifest.json', 'utf8'));
 const base = process.env.VITE_BASE_PATH || '/';
 
 for (const { id, paths } of landingRoutes) {
-  const entry = id === 'aa0003' ? 'src/pages/health/page.tsx' : 'src/pages/home/page.tsx';
+  const entry =
+    id === 'aa0004'
+      ? 'src/pages/cancer/page.tsx'
+      : id === 'aa0003'
+        ? 'src/pages/health/page.tsx'
+        : 'src/pages/home/page.tsx';
   const chunks = new Set();
   const styles = new Set();
   function collect(key) {
